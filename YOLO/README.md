@@ -1,5 +1,6 @@
 # YOLO version 1 논문 구현
 
+
 ### 1.train_bbox + class. ipynb
 ####  -BBoox에 클래스만 표시
 ![스크린샷(1112)](https://github.com/mjk022/portfolio/assets/114840042/a11ab26c-17f2-4d26-ad39-7796246ca6a6)
@@ -18,4 +19,5 @@
 
 ##
 
+학습데이터 100examples.csv :  https://www.kaggle.com/datasets/734b7bcb7ef13a045cbdd007a3c19874c2586ed0b02b4afc86126e89d00af8d2
 참고 git :  https://github.com/aladdinpersson/Machine-Learning-Collection/tree/master/ML/Pytorch/object_detection/YOLO
