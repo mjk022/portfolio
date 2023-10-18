@@ -9,5 +9,5 @@
 
 
 ### 3.train_bbox + class + 확률 + 그래프.ipynb 위의 파일에서 
-### 학습횟수에 따른 loss와 MAP의 변화를 볼 수 있는 그래프를 나타내는 코드를 추가
+###   학습횟수에 따른 loss와 MAP의 변화를 볼 수 있는 그래프를 나타내는 코드를 추가
 ![스크린샷(1113)](https://github.com/mjk022/portfolio/assets/114840042/3be35946-8825-4606-a6e4-61d5b045250f)
