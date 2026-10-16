@@ -73,7 +73,7 @@ Keras 공식 예제를 그대로 실행해, 국제 피아노 콩쿠르 연주 �
 | 베토벤 스타일 | 캐롤과 어울리지 않는 무거운 연주 |
 | **쇼팽 스타일** | **캐롤 멜로디 + 쇼팽의 화성 감각** |
 
-`samples/` 폴더에 쇼팽 곡을 시작 부분으로 생성한 결과 5곡을 넣어 두었습니다. MIDI 재생 프로그램이나 온라인 MIDI 플레이어로 들어볼 수 있습니다.
+대표 결과물은 캐롤 「Christmas Without You」를 시작 부분으로 넣어 생성한 `samples/chopin_style_carol_christmas_without_you.mid`입니다. 캐롤의 앞부분을 이어받아 모델이 쇼팽 스타일로 뒷부분을 연주합니다. 이 밖에 쇼팽 곡을 시작 부분으로 생성한 결과 5곡도 함께 넣어 두었습니다. MIDI 재생 프로그램이나 온라인 MIDI 플레이어로 들어볼 수 있습니다.
 
 ## 5. 배운 점
 
@@ -84,7 +84,8 @@ Keras 공식 예제를 그대로 실행해, 국제 피아노 콩쿠르 연주 �
 | 파일 | 설명 |
 |---|---|
 | `music_transformer_chopin_carol.ipynb` | 쇼팽 곡 선별 → 학습 → 캐롤 프롬프트 기반 생성 (최종 버전) |
-| `samples/*.mid` | 쇼팽 곡을 시작 부분으로 생성한 결과 5곡 |
+| `samples/chopin_style_carol_christmas_without_you.mid` | 캐롤을 시작 부분으로 생성한 쇼팽 스타일 캐롤 (대표 결과) |
+| `samples/chopin_style_*.mid` | 쇼팽 곡을 시작 부분으로 생성한 결과 5곡 |
 
 ## 참고
 
@@ -92,5 +93,5 @@ Keras 공식 예제를 그대로 실행해, 국제 피아노 콩쿠르 연주 �
 - 논문: Huang et al., [Music Transformer](https://arxiv.org/abs/1809.04281) (2018)
 - 데이터: [MAESTRO v3](https://magenta.tensorflow.org/datasets/maestro) (CC BY-NC-SA 4.0)
 - 실행 환경: Google Colab (GPU), Keras 3. MAESTRO zip과 캐롤 MIDI zip은 Colab에 직접 올려야 합니다.
-- 캐롤 원곡과 이를 시작 부분으로 만든 결과물은 저작권 때문에 포함하지 않았습니다.
+- 학습과 프롬프트에 사용한 캐롤 원곡 MIDI는 저작권 때문에 포함하지 않았습니다.
 - 노트북의 `mozart_*` 변수명은 이전 실험의 흔적이며, 실제로는 쇼팽 곡으로 필터링합니다.
