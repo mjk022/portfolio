@@ -1,33 +1,57 @@
-# Music Transformer로 "쇼팽 스타일 캐롤" 만들기
+# 🎹 Music Transformer — 쇼팽 스타일 캐롤 생성
 
-대학원 「인공지능의 원리와 응용」(2025-2) 팀 과제(G조)입니다. Keras 공식 예제 [Music Generation with Transformer Models](https://keras.io/examples/generative/midi_generation_with_transformer/)를 분석하고, 특정 작곡가 스타일로 학습시킨 뒤 캐롤 멜로디를 이어 연주하도록 변형했습니다.
+| 항목 | 내용 |
+|---|---|
+| 과목 | 대학원 「인공지능의 원리와 응용」 2025-2, G조 팀 과제 (5명) |
+| 주제 | 특정 작곡가 스타일로 학습한 모델이 캐롤 멜로디를 이어 연주 |
+| 기반 코드 | Keras 예제 [Music Generation with Transformer Models](https://keras.io/examples/generative/midi_generation_with_transformer/) |
+| 논문 | Huang et al., [Music Transformer](https://arxiv.org/abs/1809.04281) (2018) |
+| 데이터 | [MAESTRO v3](https://magenta.tensorflow.org/datasets/maestro) 피아노 연주 MIDI (CC BY-NC-SA 4.0) |
+| 환경 | Google Colab (GPU), Keras 3, `midi_neural_processor` |
 
-## 1. Music Transformer 핵심 정리
+## 전체 흐름
 
-기반 논문: Huang et al., [Music Transformer](https://arxiv.org/abs/1809.04281) (2018)
+```mermaid
+flowchart LR
+    A[MAESTRO MIDI] --> B[쇼팽 곡만 필터링]
+    B --> C[MIDI 토큰화<br/>Note on/off · Time shift · Velocity]
+    C --> D[Music Transformer<br/>Decoder-only 학습]
+    E[캐롤 MIDI] --> F[토큰화 → 프롬프트]
+    D --> G[다음 토큰 예측<br/>argmax × 1024회]
+    F --> G
+    G --> H[쇼팽풍 캐롤 MIDI]
+```
 
-- **MIDI 토큰화**: Note on / Note off / Time shift / Velocity 이벤트를 정수 토큰으로 바꿔 시퀀스로 학습합니다.
-- **Decoder-only 구조**: 번역처럼 입력→출력 변환(조건부 확률)이 아니라 음악 시퀀스 자체의 결합 확률을 학습하므로, Cross-attention 없이 Masked self-attention만 사용합니다.
-- **상대적 위치 어텐션**: 음악은 "몇 번째 음인가"보다 "음과 음 사이가 얼마나 떨어져 있는가"가 중요합니다. 토큰 간 거리 `d = i − j`에 해당하는 상대 위치 임베딩을 어텐션 점수에 더합니다.
-- **Skewing**: 상대 위치 점수 행렬을 비스듬히 밀어 정렬해, 메모리를 크게 쓰지 않고 상대 위치 어텐션을 계산합니다.
+## Music Transformer 핵심 정리
 
-## 2. 변형: 작곡가 스타일 캐롤
+| 개념 | 일반 Transformer | Music Transformer |
+|---|---|---|
+| 구조 | Encoder + Decoder (번역: 조건부 확률) | **Decoder-only** (음악 시퀀스의 결합 확률), Cross-attention 제거 |
+| 위치 정보 | 절대 위치 임베딩 (토큰 1 → 위치 1) | **상대 위치 어텐션**: 토큰 간 거리 `d = i − j`의 임베딩을 점수에 더함 |
+| 어텐션 점수 | Content 점수 | Content 점수 **+ Relative position 점수** |
+| 계산 방법 | — | **Skewing**: 상대 위치 행렬을 비스듬히 밀어 메모리를 아끼며 계산 |
+| 입력 | 단어 토큰 | MIDI 이벤트 토큰 (`Note on 60`, `Velocity 70`, `Time shift 20ms`, `Note off 60`) |
 
-1. **사전학습**: [MAESTRO v3](https://magenta.tensorflow.org/datasets/maestro) 피아노 연주 데이터 중 특정 작곡가 곡만 골라 학습
-   - 베토벤 → 캐롤과 어울리지 않는 연주가 나와 **쇼팽**으로 변경
-2. **프롬프트**: 캐롤 MIDI를 토큰으로 바꿔 앞부분을 seed로 입력
-3. **생성**: 마지막 1024 토큰을 입력으로 다음 토큰 확률을 예측하고, greedy(argmax)로 골라 붙이는 과정을 1024번 반복
+음악은 "몇 번째 음인가"보다 "음과 음 사이가 얼마나 떨어져 있는가"가 중요해서 상대 위치 어텐션이 효과적입니다.
 
-결과적으로 "캐롤의 멜로디 분위기 + 쇼팽의 화성 감각"을 섞은 음악을 목표로 했습니다.
+## 실험 과정
+
+| 단계 | 시도 | 결과 / 변경 |
+|---|---|---|
+| 1 | Keras 예제 그대로 재현 (MAESTRO 전체, 15 epoch) | 기본 피아노 음악 생성 확인 |
+| 2 | **베토벤** 곡으로 추가 학습 50회 + 캐롤 앞부분을 프롬프트로 | 캐롤과 어울리지 않는 연주 |
+| 3 | **쇼팽**으로 변경, epoch 100으로 증가, 캐롤 1곡을 seed로 | 캐롤 멜로디 + 쇼팽 화성감 |
+| 4 | 토큰 시퀀스 제공 방식 개선 (마지막 1024 토큰 입력 → greedy 생성) | 최종 버전 |
 
 ## 파일
 
-- `music_transformer_chopin_carol.ipynb`: 쇼팽 곡 필터링 → 학습 → 캐롤 프롬프트 기반 생성 (최종 버전)
-- `samples/`: 쇼팽 곡을 seed로 생성한 MIDI 샘플 5개
+| 파일 | 설명 |
+|---|---|
+| `music_transformer_chopin_carol.ipynb` | 쇼팽 곡 필터링 → 학습 → 캐롤 프롬프트 기반 생성 (최종) |
+| `samples/*.mid` | 쇼팽 곡을 seed로 생성한 결과 5곡 |
 
 ## 실행 시 참고
 
-- Google Colab(GPU)에서 실행했습니다.
-- `maestro-v3.0.0-midi.zip`과 캐롤 MIDI zip을 Colab에 직접 업로드해야 합니다. 캐롤 원곡 MIDI와 이를 seed로 만든 결과물은 저작권 때문에 포함하지 않았습니다.
-- 노트북의 일부 변수명(`mozart_*`)은 이전 모차르트 실험의 흔적이며, 실제로는 `Chopin`으로 필터링합니다.
-- MAESTRO 데이터는 CC BY-NC-SA 4.0 라이선스입니다.
+- `maestro-v3.0.0-midi.zip`과 캐롤 MIDI zip을 Colab에 직접 올려야 합니다.
+- 캐롤 원곡과 이를 seed로 만든 결과물은 저작권 때문에 포함하지 않았습니다.
+- 노트북의 `mozart_*` 변수명은 이전 실험의 흔적이며 실제로는 `Chopin`으로 필터링합니다.

@@ -1,30 +1,53 @@
-# 강원 소방안전 공모전 (2022)
+# 🚒 강원 소방안전 공모전 — 사고 유형 예측 (2022)
 
-격자(GRID_ID)·날짜별 환경 데이터로 **그날 그 지역에서 어떤 유형의 소방 출동 사고가 일어날지** 분류하는 모델을 비교했습니다. 팀 공모전에서 제가 맡은 모델 실험 부분입니다.
+| 항목 | 내용 |
+|---|---|
+| 대회 | 2022 강원 소방안전 빅데이터 공모전 (팀) |
+| 담당 | 모델 실험 (DecisionTree · RandomForest · SVM · XGBoost 비교) |
+| 문제 | 격자(GRID_ID) × 날짜별로 어떤 유형의 소방 출동 사고가 날지 분류 |
+| 타깃 | 사고 유형 26종 + 사고 없음(`n`) |
+| 도구 | Python, pandas, scikit-learn, XGBoost, Google Colab |
 
-## 데이터
+## 분석 흐름
 
-- 입력: 월, 일, 공휴일 여부(`hol`), 유동인구(`pop`), 평균 풍속, 격자 내 시설 수(`b_point`, `a_point`, `n_point`)
-- 타깃 `cat`: 사고 유형 26종(예: `HRFAF_OCRN_CNT`, `DRV_ACDNT_OCRN_CNT`) + 사고 없음(`n`)
-- 12월 데이터 제외, 결측 타깃은 `n`(사고 없음)으로 라벨링, 수치형 변수 표준화
-- 원본 데이터(`train.xlsx`, `test.xlsx`)는 공모전 제공 데이터라 포함하지 않았습니다.
+```mermaid
+flowchart LR
+    A[공모전 데이터<br/>train.xlsx] --> B[12월 제외<br/>결측 타깃 → n]
+    B --> C[GRID_ID·월·일 인덱스<br/>표준화]
+    C --> D[Label Encoding]
+    D --> E[train / valid 분리]
+    E --> F1[DecisionTree]
+    E --> F2[RandomForest]
+    E --> F3[SVM]
+    E --> F4[XGBoost]
+    F1 & F2 & F3 & F4 --> G[변수 중요도 · 테스트 예측]
+```
 
-## 모델 및 결과 (검증 정확도)
+## 입력 변수
 
-| 노트북 | 모델 | 정확도 |
+| 변수 | 의미 |
+|---|---|
+| `month`, `day`, `hol` | 월, 일, 공휴일 여부 |
+| `pop` | 유동인구 |
+| `평균 풍속(m/s)` | 기상 |
+| `b_point`, `a_point`, `n_point` | 격자 내 시설 수 |
+
+## 결과
+
+| 노트북 | 모델 | 검증 정확도 |
 |---|---|---|
 | `DecisionTree.ipynb` | DecisionTreeClassifier | 0.9650 |
 | `RandomForest.ipynb` | RandomForestClassifier | 0.9828 |
 | `SVM.ipynb` | SVC | 0.9832 |
 | `XGBoost.ipynb` | XGBClassifier (n_estimators=200, max_depth=7) | 0.9832 |
+| (기준) | 전부 "사고 없음"으로 예측 | **0.9832** |
 
-각 노트북은 변수 중요도 시각화와 테스트 데이터 예측 결과 저장까지 포함합니다.
+## 회고
 
-## 한계와 배운 점
+| 문제 | 원인 | 다시 한다면 |
+|---|---|---|
+| 정확도가 높아도 의미가 약함 | 검증 데이터의 98.3%가 "사고 없음" | 클래스별 recall, macro F1로 평가 |
+| 불균형 보정이 안 됨 | XGBoost에 `sample_weight`를 생성자로 넘겨 무시됨 | `fit(..., sample_weight=w)` 또는 리샘플링 |
+| 27개 클래스를 한 번에 분류 | 희소 클래스가 많음 | 사고 발생 여부 → 유형 분류 2단계 구조 |
 
-검증 데이터의 약 **98.3%가 "사고 없음"**입니다. 모든 행을 "사고 없음"으로 예측해도 정확도가 0.983이 나오므로, 위 정확도만으로는 모델이 사고를 잘 맞힌다고 볼 수 없습니다. 클래스 불균형을 줄이려고 샘플 가중치를 계산했지만, XGBoost에서는 `sample_weight`를 `fit()`이 아니라 생성자에 넘겨서 실제로 적용되지 않았습니다.
-
-다시 한다면 다음을 바꾸겠습니다.
-- 정확도 대신 클래스별 recall / macro F1로 평가
-- `sample_weight`를 `fit()`에 전달하거나 오버/언더샘플링 적용
-- "사고 발생 여부" 이진 분류 후 유형 분류하는 2단계 구조 검토
+원본 데이터(`train.xlsx`, `test.xlsx`)는 공모전 제공 데이터라 포함하지 않았습니다.
