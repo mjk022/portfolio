@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block contents %}
+<div class="row mt-5">
+    <div class="col-12">
+        <table class="table table-light">
+            <thead class="thead-light text-dark">
+                <tr>
+                    <th>#</th>
+                    <th>제목</th>
+                    <th>아이디</th>
+                    <th>일시</th>
+                </tr>
+            </thead>
+            {% for board in boards %}
+            <tbody class="text-dark">
+                <tr onclick="location.href='/boards/detail/{{ board.id }}'">
+                    <th>{{ board.id }}</th>
+                    <td>{{ board.title }}</td>
+                    <td>{{ board.writer }}</td>
+                    <td>{{ board.created_at }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <button class="btn btn-primary" onclick="location.href='/boards/write/'">글쓰기</button>
+    </div>
+</div>
+{% endblock %}

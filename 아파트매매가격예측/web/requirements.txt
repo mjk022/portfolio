@@ -1,0 +1,6 @@
+Django==4.2.4
+django-pandas
+pandas<2.2
+numpy<2
+joblib
+scikit-learn==1.2.2

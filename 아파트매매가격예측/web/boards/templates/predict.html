@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block contents %}
+
+<form action="{% url 'boards:predict' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="text" name="first" placeholder="금리" id="first">
+    <input type="text" name="second" placeholder="국내 총생산" id="second">
+    <input type="text" name="third" placeholder="대출 금리" id="third">
+    <input type="text" name="fourth" placeholder="매매 거래량" id="fourth">
+
+    <input type="submit" value="predict">
+
+    <div>
+        <h4>입력 값: </h4>
+        <h6>금리 : {{ first }}</h6>
+        <h6>국내 총생산 : {{ second }}</h6>
+        <h6>대출 금리 : {{ third }}</h6>
+        <h6>매매 거래량 : {{ fourth }}</h6>
+        <h5>예측 값 : {{ prediction }}</h5>
+    </div>
+</form>
+
+{% endblock %}

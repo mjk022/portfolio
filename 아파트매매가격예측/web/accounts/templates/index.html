@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block contents %}
+    
+    <div id="carouselExample" class="carousel slide">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="https://i.ibb.co/TRy5J7h/wallpaperbetter-1.jpg" style="width: 115%; height: 90%; margin: 20px" class="d-block w-30" alt="..." />
+            </div>
+            <div class="carousel-item">
+                <img src="https://i.ibb.co/RBxjvvt/2.jpg" style="max-width: 100%; height: auto; display: block; margin: 0 auto" class="d-block w-30" alt="..." />
+            </div>
+            <div class="carousel-item">
+                <img src="https://i.ibb.co/72HGcbh/1.png" style="display: block; margin: 0 auto" class="d-block w-30" alt="..." />
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon text-dark" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <div>
+        <h4>부자로 가는 길</h4>
+        <p>전국 부동산 아파트 매매가격 지수 예측
+            향후 6개월 부동산 아파트 매매가격 지수 예측합니다. 
+            가장 최적의 시기에 매매하여 부자가 되세요</p>
+    </div>
+
+    <form action="{% url 'accounts:predict' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="text" name="first" placeholder="금리" id="first">
+        <input type="text" name="second" placeholder="국내 총생산" id="second">
+        <input type="text" name="third" placeholder="대출 금리" id="third">
+        <input type="text" name="fourth" placeholder="매매 거래량" id="fourth">
+    
+        <input type="submit" value="predict">
+        
+        <br><br>
+        <div>
+            <h4>입력 값: </h4>
+            <h6>금리 : {{ first }}</h6>
+            <h6>국내 총생산 : {{ second }}</h6>
+            <h6>대출 금리 : {{ third }}</h6>
+            <h6>매매 거래량 : {{ fourth }}</h6>
+            <h5>예측 값 : {{ prediction }}</h5>
+        </div>
+    </form>
+
+    <br><br><br>
+    <div>
+        <h4>LDA, 워드클라우드 링크 첨부</h4>
+        <p>과거부터 지금까지의 Hot keyword 한 눈에 확인!</p>
+    </div>
+
+    <a href="{% url 'boards:test' %}" style="text-decoration: none; color: black; ">LDA 보기</a> <br>
+    <a href="{% url 'boards:apart' %}" style="text-decoration: none; color: black;">워드클라우드</a>
+
+{% endblock %}
