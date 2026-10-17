@@ -56,5 +56,14 @@
   원곡의 저작권은 원저작자에게 있으며, 생성 결과 비교 목적으로만 포함했습니다. 재생: html-midi-player (Magenta.js), 피아노 음원: Salamander Grand Piano.</p>
 </main>
 <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.5.0"></script>
+<script>
+// The Salamander soundfont only has program 0; the MIDI files use programs 1 and 4, which play silently otherwise.
+document.querySelectorAll('midi-player').forEach(p => p.addEventListener('load', () => {
+  const ns = p.noteSequence;
+  if (!ns || ns.notes.every(n => !n.program && !n.isDrum)) return;
+  ns.notes.forEach(n => { n.program = 0; n.isDrum = false; });
+  p.noteSequence = ns;
+}));
+</script>
 </body>
 </html>
