@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>쇼팽 스타일 캐롤 듣기</title>
+<style>
+  :root { --bg:#fbfaf7; --fg:#1f2328; --muted:#59636e; --card:#ffffff; --line:#d8dee4; --accent:#b4232c; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#0d1117; --fg:#e6edf3; --muted:#9198a1; --card:#161b22; --line:#30363d; --accent:#ff7b72; } }
+  body { margin:0; background:var(--bg); color:var(--fg); font-family:-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif; line-height:1.6; }
+  main { max-width:960px; margin:0 auto; padding:32px 16px 64px; }
+  h1 { font-size:1.6rem; margin:0 0 8px; }
+  h2 { font-size:1.2rem; margin:40px 0 12px; }
+  p.lead { color:var(--muted); margin:0 0 24px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px; margin:12px 0; }
+  .card h3 { margin:0 0 4px; font-size:1rem; }
+  .card .tag { display:inline-block; font-size:.8rem; padding:1px 8px; border-radius:999px; border:1px solid var(--line); color:var(--muted); margin-bottom:8px; }
+  .card.gen .tag { color:var(--accent); border-color:var(--accent); }
+  midi-player { display:block; width:100%; margin:8px 0; }
+  midi-visualizer { display:block; overflow-x:auto; background:var(--bg); border-radius:6px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:12px; }
+  a { color:var(--accent); }
+  .note { color:var(--muted); font-size:.9rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>쇼팽 스타일로 이어 연주한 캐롤</h1>
+  <p class="lead">쇼팽의 피아노곡으로 학습한 Music Transformer에게 캐롤의 앞부분을 들려주고, 그 뒤를 이어서 연주하게 했습니다.<br>
+  ▶ 버튼을 누르면 브라우저에서 바로 피아노 소리로 재생됩니다. 처음 재생할 때 피아노 음원을 불러오느라 몇 초 걸릴 수 있습니다.</p>
+
+  <h2>원곡과 생성곡 비교 — Christmas Without You</h2>
+  <div class="card">
+    <span class="tag">원곡 · 모델에 입력한 프롬프트</span>
+    <h3>Christmas Without You (원곡 MIDI)</h3>
+    <midi-player src="original_christmas_without_you.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander" visualizer="#v-orig"></midi-player>
+    <midi-visualizer type="piano-roll" id="v-orig" src="original_christmas_without_you.mid"></midi-visualizer>
+  </div>
+  <div class="card gen">
+    <span class="tag">생성곡 · Music Transformer</span>
+    <h3>쇼팽 스타일로 이어서 연주한 결과</h3>
+    <midi-player src="chopin_style_carol_christmas_without_you.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander" visualizer="#v-gen"></midi-player>
+    <midi-visualizer type="piano-roll" id="v-gen" src="chopin_style_carol_christmas_without_you.mid"></midi-visualizer>
+  </div>
+
+  <h2>쇼팽 곡을 시작 부분으로 생성한 샘플</h2>
+  <div class="grid">
+    <div class="card gen"><h3>샘플 1</h3><midi-player src="chopin_style_7.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander"></midi-player></div>
+    <div class="card gen"><h3>샘플 2</h3><midi-player src="chopin_style_9.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander"></midi-player></div>
+    <div class="card gen"><h3>샘플 3</h3><midi-player src="chopin_style_22.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander"></midi-player></div>
+    <div class="card gen"><h3>샘플 4</h3><midi-player src="chopin_style_27.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander"></midi-player></div>
+    <div class="card gen"><h3>샘플 5</h3><midi-player src="chopin_style_111.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander"></midi-player></div>
+  </div>
+
+  <p class="note">프로젝트 설명: <a href="https://github.com/mjk022/portfolio/tree/main/MusicTransformer">github.com/mjk022/portfolio — MusicTransformer</a><br>
+  원곡의 저작권은 원저작자에게 있으며, 생성 결과 비교 목적으로만 포함했습니다. 재생: html-midi-player (Magenta.js), 피아노 음원: Salamander Grand Piano.</p>
+</main>
+<script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.5.0"></script>
+</body>
+</html>
