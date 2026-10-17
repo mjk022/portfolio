@@ -14,7 +14,7 @@
 - **결과**: 감성 지수를 넣은 LSTM의 1개월 예측 오차가 0.60 → 0.40으로 감소,<br>
   예측 결과를 확인할 수 있는 웹사이트 구현
 - **논문**: 「생성 AI기반 뉴스 감성 분석과 부동산 가격 예측: LSTM과 VAR모델의 적용」,<br>
-  정보처리학회논문지, 2024 · [논문 정보](https://dcollection.sogang.ac.kr/dcollection/srch/srchDetail/000000081272)
+  정보처리학회논문지 13권 5호, 2024 · [KCI 논문 보기](https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART003084610) · [DOI](https://doi.org/10.3745/TKIPS.2024.13.5.209)
 
 ## 프로젝트 목표
 
