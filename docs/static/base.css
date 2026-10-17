@@ -18,3 +18,5 @@ a:hover {
     margin-bottom: 20px;
     border: 1px solid transparent;
 }
+/* Korean text wraps at word boundaries instead of mid-word */
+body { word-break: keep-all; overflow-wrap: break-word; }
