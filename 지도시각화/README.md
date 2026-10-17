@@ -55,14 +55,22 @@ Python 지도 라이브러리 folium으로 서울 중심의 지도를 만들고,
 - 완성한 지도는 `save()`로 HTML 파일로 저장해,<br>
   브라우저에서 확대·축소하며 볼 수 있게 했습니다.
 
+**지도 바로 보기** (클릭하면 브라우저에서 확대·축소할 수 있습니다)
+
+| 지도 | 내용 |
+|---|---|
+| [카페 위치 클러스터 지도](https://mjk022.github.io/portfolio/seoul-cafe/cafe_cluster.html) | 서울 카페 위치를 묶어서 표시, 확대하면 개별 위치 확인 (약 11MB라 로딩에 몇 초 걸림) |
+| [자치구별 단계 구분도](https://mjk022.github.io/portfolio/seoul-cafe/cafe_choropleth.html) | 구별 카페 수를 색 농도로 표시 |
+| [자치구별 단계 구분도 (사분위)](https://mjk022.github.io/portfolio/seoul-cafe/cafe_choropleth_quartile.html) | 사분위수 기준으로 색 구간을 나눈 버전 |
+
 ## 파일 구성
 
 | 파일 | 설명 |
 |---|---|
 | `folium_서울시 자치구별 상권정보_클러스터 및 시각화.ipynb` | 데이터 집계부터 지도 시각화, HTML 저장까지 |
 
-노트북 용량(약 26MB)이 큰 것은 지도 결과가 저장되어 있기 때문입니다.<br>
-GitHub에서 지도가 보이지 않으면 노트북 상단의 "Open in Colab" 링크로 열어 주세요.
+GitHub는 노트북 안의 지도를 표시하지 않기 때문에, 노트북에서는 지도 출력을 빼고<br>
+위의 링크에서 지도를 볼 수 있게 했습니다.
 
 ## 참고
 
