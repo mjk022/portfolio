@@ -1,4 +1,5 @@
 # Music Transformer로 "쇼팽이 연주하는 캐롤" 만들기
+#### (대학원 수업 프로젝트)
 
 > 쇼팽의 피아노곡으로 학습한 AI 작곡 모델에게 캐롤의 첫 소절을 들려주고,<br>
 > 그 뒤를 쇼팽 스타일로 이어서 연주하게 만든 프로젝트입니다.
@@ -8,9 +9,11 @@
 - **목표**: Music Transformer 구조를 분석하고,<br>
   특정 작곡가 스타일로 기존 곡을 이어서 연주하는 생성 모델 구현
 - **내용**: Music Transformer 모델 분석 및 "작곡가 스타일 캐롤" 생성
-- **방법**: Music Transformer 논문(Huang et al., 2018)을 Keras로 구현한 공식 예제 기반,<br>
+- **방법**: Music Transformer 논문(Huang et al., 2018)을 구현한<br>
+  Keras 공식 예제를 바탕으로,
   쇼팽 곡만 골라 학습한 뒤 캐롤을 프롬프트로 입력
-- **결과**: 캐롤 멜로디에 쇼팽 특유의 화성이 섞인 피아노 곡 생성 ([바로 듣기](https://mjk022.github.io/portfolio/music/))
+- **결과**: 캐롤 멜로디에 쇼팽 특유의 화성이 섞인 피아노 곡 생성<br>
+  ([바로 듣기](https://mjk022.github.io/portfolio/music/))
 
 ## 프로젝트 목표
 
@@ -43,10 +46,11 @@ MIDI 파일은 악보 대신 "어떤 건반을 눌렀다", "얼마나 세게",<b
 
 | 구분 | 일반 Transformer (번역 등) | Music Transformer |
 |---|---|---|
-| 구조 | 원문을 읽는 부분 + 번역문을 쓰는 부분 | **쓰는 부분(Decoder)만** 사용. 앞에 나온 음을 보고 다음 음만 이어 붙이면 되기 때문 |
-| 위치 정보 | "몇 번째 단어인가" (절대 위치) | **"앞 음과 얼마나 떨어져 있는가"** (상대 위치) |
+| 구조 | 원문을 읽는 부분 +<br>번역문을 쓰는 부분 | **쓰는 부분(Decoder)만** 사용<br>앞에 나온 음을 보고 다음 음만 이어 붙이면 되기 때문 |
+| 위치 정보 | "몇 번째 단어인가"<br>(절대 위치) | **"앞 음과 얼마나 떨어져 있는가"**<br>(상대 위치) |
 
-발표에서는 Keras 예제 코드의 Query·Key·Value 입력과 마스킹 구조를 근거로 Decoder-only임을 확인하고,<br>
+발표에서는 Keras 예제 코드의 Query·Key·Value 입력과 마스킹 구조를 근거로<br>
+Decoder-only 구조임을 확인하고,<br>
 음악 생성이 조건부 확률이 아닌 결합 확률 문제라는 점에서 그 이유를 설명했습니다.
 
 ![Decoder-only를 사용하는 이유](images/02_decoder_only.png)
@@ -77,21 +81,22 @@ flowchart LR
 **① 기본 예제 재현**
 
 Keras 공식 예제를 그대로 실행해,<br>
-국제 피아노 콩쿠르 연주 기록인 MAESTRO 데이터셋 전체로<br>
- 학습한 모델이 피아노 곡을 만드는 것을 확인했습니다.
+국제 피아노 콩쿠르 연주 기록인 MAESTRO 데이터셋 전체로 학습한 모델이<br>
+피아노 곡을 만드는 것을 확인했습니다.
 
 **② 베토벤으로 첫 시도 → 실패**
 
 베토벤 곡만 골라 추가 학습한 뒤 캐롤 앞부분을 들려줬습니다.<br>
-그런데 베토벤 특유의 무겁고 극적인 연주가 이어져, 캐롤의 밝은 분위기와 전혀 어울리지 않았습니다.
+그런데 베토벤 특유의 무겁고 극적인 연주가 이어져,<br>
+캐롤의 밝은 분위기와 전혀 어울리지 않았습니다.
 
 ![도전 1: 베토벤 스타일 캐롤 (사전학습 15 epoch → 추가학습 50회 → 캐롤 앞부분으로 생성)](images/05_beethoven.png)
 
 **③ 쇼팽으로 변경 → 개선**
 
 서정적인 선율이 많은 쇼팽으로 작곡가를 바꾸고, 학습 횟수를 100회로 늘렸습니다.<br>
-캐롤 한 곡을 시작 부분(seed)으로 주자 캐롤의 멜로디 분위기를 유지하면서<br>
-쇼팽 특유의 화성이 더해진 결과가 나왔습니다.
+캐롤 한 곡을 시작 부분(seed)으로 주자,<br>
+캐롤의 멜로디 분위기를 유지하면서 쇼팽 특유의 화성이 더해진 결과가 나왔습니다.
 
 ![도전 2: 쇼팽 스타일 캐롤의 4가지 변화 (Epoch 100, 캐롤 1곡을 seed로, 토큰 제공 방식 개선)](images/06_chopin_changes.png)
 
@@ -118,18 +123,17 @@ Keras 공식 예제를 그대로 실행해,<br>
 음이 진행되는 피아노 롤로 두 곡을 나란히 비교할 수 있습니다.
 
 대표 결과물은 캐롤 「Christmas Without You」를 시작 부분으로 넣어 생성한 곡입니다.<br>
-원곡을 함께 넣어 두었으니 두 파일을 차례로 들어보면, 모델이 캐롤의 분위기를 이어받으면서<br>
-어떻게 쇼팽 스타일로 바꿔 연주했는지 비교할 수 있습니다.
+원곡을 함께 넣어 두었으니 두 파일을 차례로 들어보면,<br>
+모델이 캐롤의 분위기를 이어받아 어떻게 쇼팽 스타일로 바꿔 연주했는지 비교할 수 있습니다.
 
 | 파일 | 내용 |
 |---|---|
 | `samples/original_christmas_without_you.mid` | 원곡 캐롤 MIDI (모델에 입력한 프롬프트) |
 | `samples/chopin_style_carol_christmas_without_you.mid` | 쇼팽 스타일로 학습한 모델이 이어서 생성한 결과 |
 
-이 밖에 쇼팽 곡을 시작 부분으로 생성한 결과<br>
-5곡(`samples/chopin_style_*.mid`)도 함께 넣어 두었습니다.<br>
+이 밖에 쇼팽 곡을 시작 부분으로 넣어<br>
+생성한 결과 5곡(`samples/chopin_style_*.mid`)도 넣어 두었습니다.<br>
 위의 듣기 페이지에서 함께 들어볼 수 있습니다.
-
 
 ## 파일 구성
 
@@ -144,8 +148,7 @@ Keras 공식 예제를 그대로 실행해,<br>
 ## 참고
 
 - 기반 코드: Keras 예제 [Music Generation with Transformer Models](https://keras.io/examples/generative/midi_generation_with_transformer/)
-- 논문: Huang et al.,<br>
-  [Music Transformer](https://arxiv.org/abs/1809.04281) (2018)
+- 논문: Huang et al., [Music Transformer](https://arxiv.org/abs/1809.04281) (2018)
 - 데이터: [MAESTRO v3](https://magenta.tensorflow.org/datasets/maestro) (CC BY-NC-SA 4.0)
 - 실행 환경: Google Colab (GPU), Keras 3<br>
   MAESTRO zip과 캐롤 MIDI zip은 Colab에 직접 올려야 합니다.
