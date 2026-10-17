@@ -135,7 +135,8 @@ flowchart TB
 ### [추천 바로 체험하기](https://mjk022.github.io/portfolio/recommend/)
 
 팀에서 Django로 만든 추천 웹사이트를,<br>
-설치 없이 누구나 브라우저에서 볼 수 있도록 정적 페이지로 옮겼습니다.
+설치 없이 누구나 브라우저에서 볼 수 있도록 정적 페이지로 옮겼습니다.<br>
+원본 Django 코드는 [Recommendation_Web](https://github.com/lightwsrld/Recommendation_Web) 저장소에 있습니다.
 
 | 메뉴 | 사용 방법 |
 |---|---|
