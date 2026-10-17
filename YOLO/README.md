@@ -47,6 +47,8 @@ flowchart LR
 모델 구조는 `(커널 크기, 필터 수, 스트라이드, 패딩)` 목록으로 정의하고,<br>
 이를 읽어 합성곱 층을 자동으로 쌓도록 만들었습니다.
 
+![architecture_config: (커널 크기, 필터 수, 스트라이드, 패딩), 'M'은 맥스풀링, 리스트는 반복](images/01_architecture.png)
+
 | 파일 | 역할 |
 |---|---|
 | `Data/getdata.ipynb` | Pascal VOC 데이터 다운로드, 라벨 변환 |
@@ -55,6 +57,10 @@ flowchart LR
 | `loss.ipynb` | 손실 함수: 박스 위치, 물체 유무, 클래스를 얼마나 틀렸는지 계산 |
 | `utils.ipynb` | 박스 겹침 정도(IoU), 중복 박스 제거(NMS), 정확도(mAP) 계산, 시각화 |
 | `train_*.ipynb` | 학습 및 결과 시각화 |
+
+`utils.ipynb`에는 객체 탐지에 필요한 보조 함수 8개를 구현했습니다.
+
+![utils.py의 8가지 함수: IoU, NMS, mAP, 시각화, 박스 변환, 체크포인트](images/02_utils.png)
 
 **② 결과를 보기 쉽게 기능 추가**
 
@@ -76,6 +82,12 @@ flowchart LR
 | 같은 회차가 중복으로 학습됨 | 학습 반복문 구조를 정리 |
 | 테스트할 때 학습된 모델이 초기화됨 | 저장해 둔 학습 결과(체크포인트)를 불러와 평가하도록 수정 |
 
+![첫 번째 문제: 확률이 1을 넘어 score 범위를 0~1로 제한](images/05_problem_probability.png)
+
+![두 번째 문제: 성능 평가 시각화 부족 → mAP·Loss 그래프 추가](images/06_problem_graphs.png)
+
+![네 번째 문제: 테스트 데이터 평가 시 모델 초기화 → 체크포인트 불러오기](images/07_problem_test_init.png)
+
 ## 결과
 
 **1단계: 박스 + 물체 이름**
@@ -90,8 +102,12 @@ flowchart LR
 
 ![스크린샷(1113)](https://github.com/mjk022/portfolio/assets/114840042/3be35946-8825-4606-a6e4-61d5b045250f)
 
+![epoch별 mAP 변화: 학습 초반 빠르게 오른 뒤 0.8 이상에서 유지](images/03_map_curve.png)
+
 학습 초기에는 박스가 엉뚱한 곳에 그려졌지만, 학습이 진행될수록 자동차,<br>
 사람, 비행기 같은 물체의 위치에 맞게 박스가 잡혔습니다.
+
+![처음 학습할 때와 학습이 진행된 뒤의 박스 비교](images/04_training_progress.png)
 
 탐지할 수 있는 물체는 Pascal VOC 데이터셋의 20종입니다.
 
@@ -103,6 +119,8 @@ flowchart LR
 
 
 ## 참고
+
+- 발표 자료의 주요 슬라이드는 `images/` 폴더에 있습니다.
 
 - 논문: Redmon et al.,<br>
   [You Only Look Once: Unified, Real-Time Object Detection](https://arxiv.org/abs/1506.02640) (2016)
