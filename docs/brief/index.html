@@ -1,0 +1,302 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>모닝 브리핑 예시</title>
+<style>
+/* Layout: wash top band (day + terrain) → swipeable card rails per section → ask box */
+:root{
+  --wash:#F9F9F7; --bg:#FCFCFB; --edge:#E1E1DF; --card:#FFFFFF;
+  --ink:#2E2C27; --ink-soft:#6B6A63; --ink-grey:#B4B3A8; --hair:#E4E3DC;
+  --clay:#C6613F; --clay-hover:#AE5133; --clay-wash:#F6E9E3; --on-clay:#FCFCFB;
+  --serif:"Nanum Myeongjo","AppleMyungjo","Noto Serif KR","Batang",Georgia,serif;
+  --sans:-apple-system,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --wash:#1E1D1A; --bg:#191816; --edge:#33322D; --card:#23221F;
+  --ink:#ECEAE3; --ink-soft:#A8A69C; --ink-grey:#5E5C55; --hair:#34332E;
+  --clay:#D9774F; --clay-hover:#E58B66; --clay-wash:#3A2A22; --on-clay:#191816; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --wash:#1E1D1A; --bg:#191816; --edge:#33322D; --card:#23221F;
+  --ink:#ECEAE3; --ink-soft:#A8A69C; --ink-grey:#5E5C55; --hair:#34332E;
+  --clay:#D9774F; --clay-hover:#E58B66; --clay-wash:#3A2A22; --on-clay:#191816; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);margin:0;word-break:keep-all}
+.band{padding-inline:max(16px,4vw)}
+.top{background:var(--wash);border-bottom:1px solid var(--edge);padding-block:40px 30px}
+.bottom{background:var(--bg);padding-block:32px 48px}
+.wrap{max-width:860px;margin:0 auto}
+.date{font-size:13px;color:var(--ink-soft);letter-spacing:.02em;margin:0 0 10px}
+h1{font-family:var(--serif);font-weight:700;font-size:34px;line-height:1.35;margin:0 0 20px;text-wrap:balance}
+svg.terrain{display:block;width:100%;height:auto;max-width:100%}
+.note{font-size:14px;line-height:1.7;color:var(--ink-soft);margin:12px 0 0;max-width:62ch}
+
+.sec+.sec{margin-top:36px}
+.sechead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px}
+h2{font-size:17px;font-weight:700;margin:0}
+.hint{font-size:12px;color:var(--ink-grey)}
+.rail{display:grid;grid-auto-flow:column;grid-auto-columns:min(84%,340px);gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 2px 14px;scrollbar-width:thin;overscroll-behavior-x:contain}
+.rail:focus-visible{outline:2px solid var(--clay);outline-offset:4px;border-radius:16px}
+.card{scroll-snap-align:start;background:var(--card);border:1px solid var(--hair);border-radius:16px;padding:18px 18px 16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.meta{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-grey)}
+.tag{color:var(--clay);font-weight:600}
+.cnt{font-variant-numeric:tabular-nums}
+.key{display:flex;flex-direction:column;gap:2px;padding:12px 14px;background:var(--clay-wash);border-radius:10px}
+.kv{font-size:28px;overflow-wrap:anywhere;font-weight:800;letter-spacing:-.01em;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.15}
+.kl{font-size:12px;color:var(--ink-soft)}
+.card h3{font-size:17px;line-height:1.4;margin:2px 0 0;text-wrap:balance}
+.txt{font-size:14.5px;line-height:1.75;color:var(--ink-soft);margin:0;flex:1}
+.foot{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;padding-top:10px;border-top:1px solid var(--hair)}
+.srcs{display:flex;flex-wrap:wrap;gap:4px 12px;min-width:0}
+.src{font-size:12.5px;color:var(--ink-soft);text-decoration:underline;text-underline-offset:2px;text-decoration-color:var(--ink-grey)}
+.askit{font:500 12.5px var(--sans);color:var(--clay);background:none;border:1px solid var(--clay);border-radius:8px;padding:6px 10px;cursor:pointer}
+.askit:hover{background:var(--clay-wash)}
+.short .rail{grid-auto-flow:row;grid-auto-columns:auto;overflow:visible;scroll-snap-type:none;padding:0}
+.short .meta .cnt{display:none}
+
+.ask{margin-top:44px;border-top:1px solid var(--edge);padding-top:28px}
+.ask h2{margin-bottom:4px}
+.ask .sub{font-size:13px;color:var(--ink-soft);margin:0 0 14px;line-height:1.6}
+.log{display:flex;flex-direction:column;gap:10px;margin-bottom:12px;max-height:min(58vh,520px);overflow-y:auto;overscroll-behavior:contain;padding:12px;border:1px solid var(--hair);border-radius:14px;background:var(--wash);scrollbar-width:thin;scrollbar-color:var(--ink-grey) transparent}
+.log:empty{display:none}
+.log::-webkit-scrollbar{width:8px}
+.log::-webkit-scrollbar-thumb{background:var(--ink-grey);border-radius:4px}
+.logbar{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--ink-grey);margin:0 2px 6px}
+.daynav{background:var(--wash);padding-block:10px 0}
+.daynav .wrap{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.daynav .wrap::-webkit-scrollbar{display:none}
+.dchip{flex:none;font:500 12.5px var(--sans);color:var(--ink-soft);background:var(--card);border:1px solid var(--hair);border-radius:999px;padding:6px 11px;cursor:pointer;white-space:nowrap}
+.dchip[aria-current="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.dchip:hover{border-color:var(--ink-grey)}
+.pastnote{font-size:13px;color:var(--ink-soft);background:var(--clay-wash);border-radius:10px;padding:9px 12px;margin:0 0 18px;line-height:1.6}
+.past{margin-top:18px;border-top:1px solid var(--hair);padding-top:12px}
+.past>summary{font-size:13.5px;font-weight:600;color:var(--ink);cursor:pointer;padding:6px 0}
+.past>summary span{color:var(--ink-grey);font-weight:400;margin-left:4px}
+.pday{margin:6px 0;border:1px solid var(--hair);border-radius:12px;background:var(--card)}
+.pday>summary{font-size:13px;color:var(--ink-soft);padding:10px 12px;cursor:pointer}
+.dsep{align-self:center;font-size:11.5px;color:var(--ink-grey);background:var(--bg);border:1px solid var(--hair);border-radius:999px;padding:3px 10px;margin:6px 0 2px;flex:none}
+.plog{display:flex;flex-direction:column;gap:10px;max-height:min(50vh,420px);overflow-y:auto;overscroll-behavior:contain;padding:0 12px 12px;scrollbar-width:thin}
+.matt,.msg{flex:none}
+.msg{max-width:88%;padding:10px 14px;border-radius:14px;font-size:14.5px;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere}
+.me{align-self:flex-end;background:var(--clay);color:var(--on-clay);border-bottom-right-radius:4px}
+.ai{align-self:flex-start;background:var(--card);border:1px solid var(--hair);color:var(--ink);border-bottom-left-radius:4px}
+.ai.wait{color:var(--ink-grey)}
+.sugs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.sug{font:13px var(--sans);color:var(--ink);background:var(--card);border:1px solid var(--hair);border-radius:999px;padding:7px 12px;cursor:pointer;text-align:left}
+.sug:hover{border-color:var(--ink-grey)}
+form.box{display:flex;gap:6px;align-items:flex-end}
+textarea{flex:1;min-width:0;resize:none;font:16px/1.5 var(--sans);color:var(--ink);background:var(--card);border:1px solid var(--hair);border-radius:12px;padding:9px 12px;min-height:44px;max-height:160px}
+textarea:focus{outline:2px solid var(--clay);outline-offset:0;border-color:transparent}
+.send{font:600 14px var(--sans);background:var(--clay);color:var(--on-clay);border:1px solid var(--clay);border-radius:10px;padding:11px 16px;cursor:pointer;white-space:nowrap}
+.send:hover{background:var(--clay-hover)}
+.send:disabled{opacity:.5;cursor:default}
+.send{display:inline-flex;align-items:center;gap:6px}
+.send svg{width:14px;height:14px}
+.send.stop{background:var(--card);color:var(--ink);border-color:var(--ink-grey)}
+.send.stop:hover{background:var(--wash)}
+.acts{display:flex;flex-wrap:wrap;gap:4px;align-self:flex-start;margin:-4px 0 2px 2px;flex:none}
+.acts button{display:inline-flex;align-items:center;gap:5px;font:500 12.5px var(--sans);color:var(--ink-soft);background:none;border:1px solid transparent;border-radius:8px;padding:6px 8px;cursor:pointer;min-height:32px}
+.acts button:hover{border-color:var(--hair);background:var(--card);color:var(--ink)}
+.acts button:disabled{opacity:.4;cursor:default}
+.acts svg{width:14px;height:14px}
+.msg.stopped::after{content:" · 여기서 멈췄어요";color:var(--ink-grey);font-size:12.5px}
+.stat{font-size:12.5px;color:var(--ink-soft);margin-top:8px;min-height:1em}
+.off{font-size:13.5px;color:var(--ink-soft);line-height:1.7}
+.matt{display:flex;flex-wrap:wrap;gap:6px;align-self:flex-end;max-width:88%;justify-content:flex-end}
+.matt img{width:64px;height:64px;object-fit:cover;border-radius:10px;border:1px solid var(--hair)}
+.matt .fchip{font-size:12px;color:var(--ink-soft);background:var(--card);border:1px solid var(--hair);border-radius:8px;padding:5px 9px;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.attach{flex:none;display:grid;place-items:center;width:44px;height:44px;border:1px solid var(--hair);background:var(--card);color:var(--ink-soft);border-radius:12px;cursor:pointer}
+.attach:hover{border-color:var(--ink-grey);color:var(--ink)}
+.attach svg{width:20px;height:20px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.chips:empty{display:none}
+.chip{display:inline-flex;align-items:center;gap:6px;max-width:100%;font-size:12.5px;color:var(--ink);background:var(--clay-wash);border-radius:999px;padding:4px 4px 4px 10px}
+.chip img{width:22px;height:22px;object-fit:cover;border-radius:50%}
+.chip .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px}
+.chip .sz{color:var(--ink-soft);font-variant-numeric:tabular-nums}
+.chip button{display:grid;place-items:center;width:24px;height:24px;border:0;border-radius:50%;background:none;color:var(--ink-soft);font-size:16px;line-height:1;cursor:pointer}
+.chip button:hover{background:var(--card);color:var(--ink)}
+.ask.drag form.box textarea{outline:2px dashed var(--clay);outline-offset:2px}
+textarea{scrollbar-width:thin}
+.notice{font-size:13px;line-height:1.6;color:var(--ink);background:var(--clay-wash);border-radius:10px;padding:9px 12px;margin:0 0 8px}
+.fhint{font-size:12px;color:var(--ink-grey);margin:6px 0 0}
+button:focus-visible,a:focus-visible{outline:2px solid var(--clay);outline-offset:2px}
+@media (max-width:640px){h1{font-size:25px}.kv{font-size:24px}}
+@media (prefers-reduced-motion:reduce){.rail{scroll-behavior:auto}}
+</style>
+
+
+<div class="band top"><div class="wrap" id="topwrap">
+  <p class="date">토요일 · 2026년 10월 17일</p>
+  <h1>금요일 코스피는 7거래일 만에 2% 반등했지만 밤사이 나스닥이 2.15% 빠지고 유가는 100달러를 넘었어요. 주말엔 19일 중국 GDP와 22일 금통위만 챙겨 두세요.</h1>
+  <svg class="terrain" viewBox="0 0 840 170" role="img" aria-label="잔잔한 수면처럼 평평한 하루">
+    <circle cx="140" cy="62" r="18" fill="var(--clay)"/>
+    <g stroke="var(--clay)" stroke-width="2" stroke-linecap="round">
+      <line x1="140" y1="30" x2="140" y2="22"/><line x1="112" y1="40" x2="106" y2="34"/><line x1="168" y1="40" x2="174" y2="34"/>
+      <line x1="104" y1="62" x2="96" y2="62"/><line x1="176" y1="62" x2="184" y2="62"/>
+    </g>
+    <path d="M6 112 C120 110 220 114 330 112 S560 110 680 112 S800 113 834 112" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M300 128 q12 -4 24 0 M520 132 q10 -3 20 0" fill="none" stroke="var(--ink-grey)" stroke-width="1.6" stroke-linecap="round"/>
+    <g fill="none" stroke="var(--ink-soft)" stroke-width="1.8" stroke-linecap="round">
+      <path d="M672 54 q8 -8 16 0 q8 -8 16 0"/><path d="M716 72 q6 -6 12 0 q6 -6 12 0"/>
+    </g>
+  </svg>
+  
+</div></div>
+
+<div class="band bottom"><div class="wrap">
+<section class="sec">
+  <div class="sechead"><h2>AI·테크</h2><span class="hint">옆으로 넘겨 보세요 →</span></div>
+  <div class="rail" tabindex="0" aria-label="AI·테크 카드">
+<article class="card" data-title="앤트로픽 IPO 몸값, 2조→1.5조 달러로 눈높이 낮아져">
+  <div class="meta"><span class="tag">AI·테크</span><span class="cnt">1 / 8</span></div>
+  <div class="key"><span class="kv">$1.5조</span><span class="kl">일부 투자자가 논의한 앤트로픽 IPO 기업가치 (로이터 · 10/15 보도)</span></div>
+  <h3>앤트로픽 IPO 몸값, 2조→1.5조 달러로 눈높이 낮아져</h3>
+  <p class="txt">로이터에 따르면 14일 샌프란시스코 본사에서 열린 앤트로픽 투자자의 날 이후, 일부 투자자들이 11월 상장 때 기업가치를 약 1조 5,000억 달러로 논의하고 있습니다. 그동안 거론되던 약 2조 달러에서 크게 낮아진 것으로, 3분기 매출이 168억 달러로 직전 분기보다 45% 늘었지만 2분기(116억 달러, 1분기의 두 배 이상)보다 성장 속도가 느려진 것이 이유입니다. 앤트로픽은 3분기에 조정 기준 흑자를 냈다고 밝혔고, 10년간 클라우드·컴퓨팅에 최소 5,180억 달러를 쓰기로 약정해 두었습니다. 같은 주 코어위브 등 AI 인프라주가 급락한 만큼, 이 상장의 흥행 여부가 AI 투자 심리와 국내 반도체주 흐름을 가를 변수로 꼽힙니다.</p>
+  <div class="foot"><span class="srcs"><a class="src" href="https://www.globalbankingandfinance.com/investors-temper-anthropic-ipo-valuation-expectations-over/" target="_blank" rel="noopener">로이터 (GBAF 전재) ↗</a><a class="src" href="https://www.cnbc.com/2026/10/15/anthropics-third-quarter-revenue-hits-16point8-billion-ipo.html" target="_blank" rel="noopener">CNBC ↗</a><a class="src" href="https://www.bloomberg.com/news/articles/2026-10-14/anthropic-revenue-jumps-to-16-8-billion-in-quarter-before-ipo" target="_blank" rel="noopener">블룸버그 ↗</a></span></div>
+</article>
+<article class="card" data-title="Gemini 4 Argon 에이전트 4개, 마인크래프트를 27시간 만에 깼다">
+  <div class="meta"><span class="tag">AI·테크</span><span class="cnt">2 / 8</span></div>
+  <div class="key"><span class="kv">27시간 14분</span><span class="kl">에이전트 4개가 엔더 드래곤을 잡기까지 걸린 시간 (10/16 공개)</span></div>
+  <h3>Gemini 4 Argon 에이전트 4개, 마인크래프트를 27시간 만에 깼다</h3>
+  <p class="txt">구글 딥마인드는 16일 Gemini 4 Argon 에이전트 4개가 사람 도움 없이 마인크래프트를 처음부터 끝까지 깼다고 X에서 밝혔습니다. AI Weekly가 정리한 논문 내용에 따르면 에이전트들은 무작위 시작 지점에서 27시간 14분 만에 엔더 드래곤을 쓰러뜨렸고, 그동안 프로그램 2,783개를 짜고 메시지 229건을 주고받으며 605번 죽었습니다. 역할을 미리 정해 주지 않았는데도 게임 속 채팅과 공유 메모만으로 일을 나눠 맡고 서로의 오류를 함께 고쳤다는 점이 핵심입니다. 여러 AI가 오랜 시간 협업해 큰 일을 끝내는 능력은 회사 업무를 에이전트 팀에 맡기는 흐름과 바로 이어집니다.</p>
+  <div class="foot"><span class="srcs"><a class="src" href="https://x.com/GoogleDeepMind/status/2111127991401247033" target="_blank" rel="noopener">X @GoogleDeepMind ↗</a><a class="src" href="https://aiweekly.co/alerts/google-deepminds-four-gemini-4-argon-agents-beat-minecraft-from-a-random-spawn" target="_blank" rel="noopener">AI Weekly ↗</a><a class="src" href="https://huggingface.co/papers/2610.22319" target="_blank" rel="noopener">논문 (Hugging Face) ↗</a></span></div>
+</article>
+<article class="card" data-title="BofA, Mythos가 찾은 보안 구멍 메우려 1,000명 투입">
+  <div class="meta"><span class="tag">AI·테크</span><span class="cnt">3 / 8</span></div>
+  <div class="key"><span class="kv">1,000명</span><span class="kl">BofA가 2분기에 새로 뽑은 보안 패치 계약직 (CNBC · 10/14 보도)</span></div>
+  <h3>BofA, Mythos가 찾은 보안 구멍 메우려 1,000명 투입</h3>
+  <p class="txt">CNBC에 따르면 브라이언 모이니핸 뱅크오브아메리카(BofA) CEO는 앤트로픽의 Claude Mythos가 찾아낸 자사·협력사 소프트웨어 취약점을 고치기 위해 2분기에 계약직 1,000명을 더 뽑았다고 투자자들에게 밝혔습니다. 이들은 기존 내부 인력 약 3,000명과 함께 일하며, 한 번의 점검에서만 2만 3,000건이 넘는 문제가 나왔습니다. 소프트웨어 보완과 자금세탁방지 대응으로 3분기 비용이 &#x27;수억 달러 이상&#x27; 늘었지만, 모이니핸은 AI로 올해 3억 달러, 2027년 7억 달러를 아낄 것으로 내다봤습니다. AI가 보안 구멍을 사람보다 훨씬 빨리 찾아내면서, 국내 금융사도 &#x27;찾는 속도&#x27;를 &#x27;고치는 속도&#x27;가 따라가야 하는 숙제를 안게 됐습니다.</p>
+  <div class="foot"><span class="srcs"><a class="src" href="https://www.cnbc.com/2026/10/14/anthropic-mythos-bank-of-america-hiring-cost.html" target="_blank" rel="noopener">CNBC ↗</a><a class="src" href="https://aiweekly.co/alerts/bank-of-america-hired-1000-q2-contractors-to-patch-software-flaws-anthropics" target="_blank" rel="noopener">AI Weekly ↗</a></span></div>
+</article>
+<article class="card" data-title="Claude Mythos 5, 양자회로를 최고 기록보다 효율적으로 설계">
+  <div class="meta"><span class="tag">AI·테크</span><span class="cnt">4 / 8</span></div>
+  <div class="key"><span class="kv">10배+</span><span class="kl">일부 회로에서 기존 최고 설계 대비 개선 폭 (앤트로픽 · 10/16)</span></div>
+  <h3>Claude Mythos 5, 양자회로를 최고 기록보다 효율적으로 설계</h3>
+  <p class="txt">앤트로픽은 16일 X에서 Claude Mythos 5가 평범한 말로 된 지시만 받고, 지금까지 발표된 최고 수준보다 더 효율적인 양자회로를 설계했다고 밝혔습니다. 개선 폭은 경우에 따라 10배(한 자릿수 차이) 이상이었다는 설명입니다. 회로가 효율적일수록 양자 알고리즘에 필요한 자원이 줄어, 화학·소재 분야 양자컴퓨팅 활용이 더 빨리 가능해질 수 있다고 앤트로픽은 덧붙였습니다. 결과의 세부 검증은 아직 공개된 글 수준이지만, AI가 과학 연구의 설계 단계까지 들어오고 있다는 또 하나의 사례입니다.</p>
+  <div class="foot"><span class="srcs"><a class="src" href="https://x.com/AnthropicAI/status/2111152183240511640" target="_blank" rel="noopener">X @AnthropicAI ↗</a></span></div>
+</article>
+<article class="card" data-title="GPT-6 Astra Pro, 에이전트 여러 개가 한 일을 나눠 처리">
+  <div class="meta"><span class="tag">AI·테크</span><span class="cnt">5 / 8</span></div>
+  <div class="key"><span class="kv">병렬 에이전트</span><span class="kl">ChatGPT Pro의 GPT-6 Astra Pro에 새로 들어간 기능 (10/16)</span></div>
+  <h3>GPT-6 Astra Pro, 에이전트 여러 개가 한 일을 나눠 처리</h3>
+  <p class="txt">OpenAI는 16일 ChatGPT의 GPT-6 Astra Pro가 더 빨리 답하고 플러그인·도구를 더 잘 쓰도록 업그레이드됐으며, 이제 여러 에이전트가 한 작업의 서로 다른 부분을 동시에 처리한다고 밝혔습니다. 사용자는 에이전트마다 진행 상황을 따라가고 끝난 작업을 열어 검토할 수 있고, 우선 Pro 사용자의 채팅 탭에서 쓸 수 있습니다. 앤트로픽도 Claude Opus 5.5의 &#x27;패스트 모드&#x27;를 대기 명단 없이 정식으로 열었는데, 출력 속도가 최대 2.5배 빠른 대신 100만 토큰당 입력 8달러·출력 40달러를 받습니다. 두 회사 모두 &#x27;더 똑똑하게&#x27;만큼 &#x27;더 빨리, 여럿이 함께&#x27;에 힘을 싣고 있다는 신호입니다.</p>
+  <div class="foot"><span class="srcs"><a class="src" href="https://x.com/OpenAI/status/2111192259073094035" target="_blank" rel="noopener">X @OpenAI ↗</a><a class="src" href="https://platform.claude.com/docs/en/build-with-claude/fast-mode" target="_blank" rel="noopener">앤트로픽 문서 · 패스트 모드 ↗</a></span></div>
+</article>
+<article class="card" data-title="오픈 모델 러시…Reflection Beam 가중치 공개, 엔비디아도 가세">
+  <div class="meta"><span class="tag">AI·테크</span><span class="cnt">6 / 8</span></div>
+  <div class="key"><span class="kv">5,010억</span><span class="kl">Beam 전체 파라미터 (활성 약 230억 · 10/16 가중치 공개)</span></div>
+  <h3>오픈 모델 러시…Reflection Beam 가중치 공개, 엔비디아도 가세</h3>
+  <p class="txt">엔비디아가 투자한 미국 Reflection AI는 16일 첫 오픈 모델 Beam의 가중치를 아파치 2.0 라이선스로 공개했습니다(VentureBeat). 전체 5,010억 개 중 토큰마다 약 230억 개만 쓰는 구조로 100만 토큰 문맥을 지원하고, 다른 오픈 모델보다 추론 토큰을 약 3배 적게 쓴다고 회사는 주장합니다. 하루 앞선 15일 엔비디아도 1,200억 파라미터(활성 120억)의 멀티모달 에이전트 모델 Nemotron 3.5 Super VL을 허깅페이스 등에 열었고, 같은 급 오픈 에이전트 모델보다 5배 빠르다고 밝혔습니다. 중국 모델이 주도해 온 오픈 모델 시장에 미국 쪽 선택지가 늘면서, 자체 서버에서 AI를 돌리려는 국내 기업에는 비교할 후보가 많아졌습니다.</p>
+  <div class="foot"><span class="srcs"><a class="src" href="https://venturebeat.com/technology/reflections-beam-aims-to-undercut-chinese-open-models-with-fewer-tokens-not-cheaper-tokens" target="_blank" rel="noopener">VentureBeat ↗</a><a class="src" href="https://huggingface.co/blog/reflection-beam" target="_blank" rel="noopener">Hugging Face 블로그 ↗</a><a class="src" href="https://blogs.nvidia.com/blog/nemotron-3-5-super-vl/" target="_blank" rel="noopener">엔비디아 블로그 ↗</a></span></div>
+</article>
+<article class="card" data-title="미 FTC, OpenAI·앤트로픽에 AI 안전사고 자료 요구">
+  <div class="meta"><span class="tag">AI·테크</span><span class="cnt">7 / 8</span></div>
+  <div class="key"><span class="kv">8개 주</span><span class="kl">ChatGPT 안전 문제로 OpenAI를 고소한 미국 주 (The Neuron · 10/16 정리)</span></div>
+  <h3>미 FTC, OpenAI·앤트로픽에 AI 안전사고 자료 요구</h3>
+  <p class="txt">미 연방거래위원회(FTC)는 OpenAI와 앤트로픽에 AI 안전사고, 안전장치, 마케팅, 개인정보 정책에 관한 자료를 요구하는 민사조사요구(CID)를 보냈고, 15일 대변인을 통해 이를 확인했습니다(TechRepublic). Axios는 두 회사 고위 임원의 증언도 요구했다고 전했지만, 조사 자체가 위법을 뜻하지는 않습니다. 같은 시기 아칸소·애리조나 등 8개 주는 OpenAI가 위험을 오도하고 미성년자를 제대로 보호하지 않았다며 각각 소송을 냈고, 앤트로픽은 의원들에게 자체 AI 안전 법안을 조용히 제안했다고 폴리티코가 보도했습니다(X @Reuters). 미국에서 AI 회사 책임을 묻는 움직임이 동시에 커지는 만큼, 국내 AI 규제 논의에도 참고가 될 흐름입니다.</p>
+  <div class="foot"><span class="srcs"><a class="src" href="https://www.techrepublic.com/article/news-ftc-subpoenas-openai-anthropic-ai-safety/" target="_blank" rel="noopener">TechRepublic ↗</a><a class="src" href="https://www.theneuron.ai/digest/everything-that-happened-in-ai-today-friday-october-16-2026/" target="_blank" rel="noopener">The Neuron ↗</a><a class="src" href="https://x.com/Reuters/status/2111235782572728605" target="_blank" rel="noopener">X @Reuters ↗</a></span></div>
+</article>
+<article class="card" data-title="이번 주 볼만한 AI 영상">
+  <div class="meta"><span class="tag">AI·테크</span><span class="cnt">8 / 8</span></div>
+  <div class="key"><span class="kv">3편</span><span class="kl">10/12~10/14 올라온 AI 영상 (조코딩 · AI Explained · Matthew Berman)</span></div>
+  <h3>이번 주 볼만한 AI 영상</h3>
+  <p class="txt">조코딩은 12일 &#x27;AI뉴스&#x27;(36분 40초)에서 OpenAI의 수학 원고 공개, GPT-6 대화형 UI, Claude Haiku 5.5 등 한 주의 AI 소식을 묶었습니다. AI Explained는 같은 날 &#x27;AI 연구소들, 경쟁 탓에 사고는 피할 수 없다고 경고&#x27;(31분 1초)에서 연구소들이 왜 속도를 늦추지 못하는지와 앞으로 18개월이 왜 예측하기 어려운지를 다뤘습니다. Matthew Berman은 14일 &#x27;Google just went FRONTIER&#x27;(12분 15초)로 Gemini 4 Argon을 소개했습니다. 한국어로 빠르게 훑으려면 조코딩, 오늘 카드의 마인크래프트 소식 배경이 궁금하면 Berman의 Argon 영상이 맞습니다.</p>
+  <div class="vids" style="display:flex;flex-direction:column;gap:6px" aria-label="관련 영상"><a class="vid" href="https://www.youtube.com/watch?v=-gww2TryXkE" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--hair);border-radius:10px;background:var(--wash);color:var(--ink);text-decoration:none;min-width:0"><span aria-hidden="true" style="flex:none;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--clay);color:var(--on-clay);font-size:12px">▶</span><span style="min-width:0;display:flex;flex-direction:column;gap:1px"><span style="font-size:13px;font-weight:600;line-height:1.4">조코딩 · AI뉴스 한 주 정리 (36분 40초)</span><span style="font-size:11.5px;color:var(--ink-soft)">YouTube 조코딩 · 10/12</span></span></a><a class="vid" href="https://www.youtube.com/watch?v=C4Sq3Rot8FU" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--hair);border-radius:10px;background:var(--wash);color:var(--ink);text-decoration:none;min-width:0"><span aria-hidden="true" style="flex:none;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--clay);color:var(--on-clay);font-size:12px">▶</span><span style="min-width:0;display:flex;flex-direction:column;gap:1px"><span style="font-size:13px;font-weight:600;line-height:1.4">AI Explained · 경쟁이 부르는 사고 위험 (31분 1초)</span><span style="font-size:11.5px;color:var(--ink-soft)">YouTube AI Explained · 10/12</span></span></a><a class="vid" href="https://www.youtube.com/watch?v=M8iqahFogtA" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--hair);border-radius:10px;background:var(--wash);color:var(--ink);text-decoration:none;min-width:0"><span aria-hidden="true" style="flex:none;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--clay);color:var(--on-clay);font-size:12px">▶</span><span style="min-width:0;display:flex;flex-direction:column;gap:1px"><span style="font-size:13px;font-weight:600;line-height:1.4">Matthew Berman · Gemini 4 Argon (12분 15초)</span><span style="font-size:11.5px;color:var(--ink-soft)">YouTube Matthew Berman · 10/14</span></span></a></div>
+  <div class="foot"><span class="srcs"><a class="src" href="https://www.youtube.com/watch?v=-gww2TryXkE" target="_blank" rel="noopener">영상 조코딩 AI뉴스 ↗</a><a class="src" href="https://www.youtube.com/watch?v=C4Sq3Rot8FU" target="_blank" rel="noopener">영상 AI Explained ↗</a><a class="src" href="https://www.youtube.com/watch?v=M8iqahFogtA" target="_blank" rel="noopener">영상 Matthew Berman ↗</a></span></div>
+</article>
+  </div>
+</section>
+<section class="sec">
+  <div class="sechead"><h2>경제·시장</h2><span class="hint">옆으로 넘겨 보세요 →</span></div>
+  <div class="rail" tabindex="0" aria-label="경제·시장 카드">
+<article class="card" data-title="코스피 2.05% 반등…7거래일 연속 하락 끊었다">
+  <div class="meta"><span class="tag">경제·시장</span><span class="cnt">1 / 6</span></div>
+  <div class="key"><span class="kv">5,668.05</span><span class="kl">코스피 10/16(금) 종가 (+113.83p, +2.05%)</span></div>
+  <h3>코스피 2.05% 반등…7거래일 연속 하락 끊었다</h3>
+  <p class="txt">16일 코스피는 113.83포인트(2.05%) 오른 5,668.05로 마감해 7거래일 연속 하락을 끊었고, 장중 5,809.94까지 올랐다가 오후에 상승 폭을 일부 반납했습니다(비즈니스코리아). 전날 사상 최대인 3조 6,400억 원을 판 외국인이 3,410억 원 순매수로 돌아섰고, 개인(4,846억 원)과 기관(6,833억 원)은 차익을 실현했습니다. 삼성전자는 2.62% 오른 21만 5,500원, SK하이닉스는 0.79% 오른 127만 2,000원이었고, 시장은 과매도 뒤 기술적 반등으로 해석했습니다. 다만 밤사이 나스닥이 2% 넘게 빠져, 다음 거래일인 19일(월)에는 반등이 이어질지 다시 시험대에 오릅니다.</p>
+  <div class="foot"><span class="srcs"><a class="src" href="https://www.businesskorea.co.kr/news/articleView.html?idxno=279010" target="_blank" rel="noopener">비즈니스코리아 마감시황 ↗</a><a class="src" href="https://view.asiae.co.kr/article/2026101615351941356" target="_blank" rel="noopener">아시아경제 ↗</a><a class="src" href="https://www.mt.co.kr/stock/2026/10/16/2026101615331353587" target="_blank" rel="noopener">머니투데이 ↗</a></span></div>
+</article>
+<article class="card" data-title="코스닥 4.46% 급등…매수 사이드카까지">
+  <div class="meta"><span class="tag">경제·시장</span><span class="cnt">2 / 6</span></div>
+  <div class="key"><span class="kv">794.78</span><span class="kl">코스닥 10/16(금) 종가 (+33.96p, +4.46%)</span></div>
+  <h3>코스닥 4.46% 급등…매수 사이드카까지</h3>
+  <p class="txt">코스닥은 33.96포인트(4.46%) 오른 794.78로 마감했고, 낮 12시 55분에는 프로그램 매수를 잠시 멈추는 매수 사이드카가 발동됐습니다(비즈니스코리아). 장중 807.54까지 올라 800선을 잠깐 넘기도 했습니다. 기관이 1,675억 원을 순매수한 반면 개인(905억 원)과 외국인(929억 원)은 팔았습니다. 하루 전 7.65% 폭락에서 낙폭의 절반가량을 되찾았지만, 분석가들은 22일 한국은행 금통위와 다음 주 FOMC를 앞두고 신중하라고 조언했습니다.</p>
+  <div class="foot"><span class="srcs"><a class="src" href="https://www.businesskorea.co.kr/news/articleView.html?idxno=279010" target="_blank" rel="noopener">비즈니스코리아 ↗</a><a class="src" href="https://www.g-enews.com/article/Securities/2026/10/20261016155516727923c501012_1" target="_blank" rel="noopener">글로벌이코노믹 ↗</a></span></div>
+</article>
+<article class="card" data-title="원·달러 13.2원 내린 1,331.4원">
+  <div class="meta"><span class="tag">경제·시장</span><span class="cnt">3 / 6</span></div>
+  <div class="key"><span class="kv">1,331.4원</span><span class="kl">원·달러 10/16(금) 오후 3:30 (전일 대비 −13.2원)</span></div>
+  <h3>원·달러 13.2원 내린 1,331.4원</h3>
+  <p class="txt">16일 원·달러 환율은 1,340.0원에 출발해 장 초반 1,345원을 잠깐 넘었다가, 전날보다 13.2원 내린 1,331.4원으로 마감했습니다(비즈니스코리아). 외국인 매도가 잦아들고 수출업체의 달러 매도가 이어진 데다, 세계 달러 강세가 쉬어 가고 외환당국의 속도 조절 기대가 겹친 결과입니다. 하루 만에 전날 상승분(6.3원)의 두 배를 되돌린 셈입니다. 다만 밤사이 뉴욕 증시가 다시 흔들려, 월요일 환율은 외국인 수급에 따라 다시 오를 수 있습니다.</p>
+  <div class="foot"><span class="srcs"><a class="src" href="https://www.businesskorea.co.kr/news/articleView.html?idxno=279010" target="_blank" rel="noopener">비즈니스코리아 ↗</a></span></div>
+</article>
+<article class="card" data-title="나스닥 2.15%↓…AI 인프라 ‘빚 공포’에 6월 이후 최악의 한 주">
+  <div class="meta"><span class="tag">경제·시장</span><span class="cnt">4 / 6</span></div>
+  <div class="key"><span class="kv">−2.15%</span><span class="kl">나스닥 10/16(금) 종가 26,140.03 · 전일 대비</span></div>
+  <h3>나스닥 2.15%↓…AI 인프라 ‘빚 공포’에 6월 이후 최악의 한 주</h3>
+  <p class="txt">16일(현지) 나스닥은 572.99포인트(2.15%) 내린 26,140.03, S&amp;P 500은 1.09% 내린 7,659.44, 다우는 0.34% 내린 52,002.41로 마감했고, 나스닥은 이번 주 4% 넘게 빠져 6월 이후 최악의 한 주를 보냈습니다(이투데이). 코어위브(−11.91%)는 주간 하락률이 23%를 넘었고 마이크론(−5.63%)·AMD(−5.95%)·샌디스크(−6.85%)·엔비디아(−1.43%)도 약했는데, WSJ는 신용 불안이 기술주를 괴롭혔다고 정리했습니다(X @WSJmarkets). 블록미디어는 AI 기업의 부채 부담과 100달러를 넘은 유가가 겹쳤다고 전했고, 오선의 미국 증시 라이브도 요약 영상에 ‘반도체 8연속 하락·코어위브 급락, AI 트레이드 흔들리나’라는 제목을 달았습니다. 금요일 국내 반등이 월요일에 그대로 시험받을 수 있는 이유입니다.</p>
+  <div class="vids" style="display:flex;flex-direction:column;gap:6px" aria-label="관련 영상"><a class="vid" href="https://www.youtube.com/watch?v=EIw44-rw7Cw" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--hair);border-radius:10px;background:var(--wash);color:var(--ink);text-decoration:none;min-width:0"><span aria-hidden="true" style="flex:none;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--clay);color:var(--on-clay);font-size:12px">▶</span><span style="min-width:0;display:flex;flex-direction:column;gap:1px"><span style="font-size:13px;font-weight:600;line-height:1.4">오선 · 미국 증시 오늘의 요약 (2분 59초)</span><span style="font-size:11.5px;color:var(--ink-soft)">YouTube 오선의 미국 증시 라이브 · 10/16</span></span></a></div>
+  <div class="foot"><span class="srcs"><a class="src" href="https://www.etoday.co.kr/news/view/2636885" target="_blank" rel="noopener">이투데이 뉴욕마감 ↗</a><a class="src" href="https://www.blockmedia.co.kr/archives/1152761" target="_blank" rel="noopener">블록미디어 ↗</a><a class="src" href="https://x.com/WSJmarkets/status/2111193007760318829" target="_blank" rel="noopener">X @WSJmarkets ↗</a><a class="src" href="https://x.com/FirstSquawk/status/2111186079911190814" target="_blank" rel="noopener">X @FirstSquawk · 코어위브 ↗</a><a class="src" href="https://www.youtube.com/watch?v=EIw44-rw7Cw" target="_blank" rel="noopener">영상 오선 ↗</a></span></div>
+</article>
+<article class="card" data-title="WTI 101달러 돌파…호르무즈·후티 공격에 유가 3%대 급등">
+  <div class="meta"><span class="tag">경제·시장</span><span class="cnt">5 / 6</span></div>
+  <div class="key"><span class="kv">$101.41</span><span class="kl">WTI 11월물 10/16(금) 정산가 (+3.51%)</span></div>
+  <h3>WTI 101달러 돌파…호르무즈·후티 공격에 유가 3%대 급등</h3>
+  <p class="txt">16일 WTI는 3.44달러(3.51%) 오른 배럴당 101.41달러, 브렌트유 12월물은 3.94달러(3.72%) 오른 109.86달러로 마감했습니다(이투데이, X @FirstSquawk). 호르무즈 해협에서 이란의 공격이 거세지고 후티 반군과 사우디의 교전, 우크라이나 에너지 시설 공격이 다시 시작된 것이 이유로 꼽혔습니다. 로이터는 후티가 예멘 정부가 있는 아덴의 대통령궁을 공격했고, 사우디가 최근 몇 주 새 리야드 공항을 겨냥한 공격이 20차례였다고 밝혔다고 전했습니다(X @Reuters). 원유를 수입에 기대는 한국에는 물가와 무역수지에 직접 부담이라, 정부가 같은 날 석유 최고가격을 동결한 것도 이 때문입니다.</p>
+  <div class="foot"><span class="srcs"><a class="src" href="https://www.etoday.co.kr/news/view/2636885" target="_blank" rel="noopener">이투데이 ↗</a><a class="src" href="https://x.com/FirstSquawk/status/2111168464106991875" target="_blank" rel="noopener">X @FirstSquawk · 브렌트 ↗</a><a class="src" href="https://x.com/Reuters/status/2111236110693110033" target="_blank" rel="noopener">X @Reuters ↗</a></span></div>
+</article>
+<article class="card" data-title="미 10년물 5.09%…FOMC 동결 확률 85%, 22일엔 금통위">
+  <div class="meta"><span class="tag">경제·시장</span><span class="cnt">6 / 6</span></div>
+  <div class="key"><span class="kv">85%</span><span class="kl">10/27~28 FOMC 금리 동결 확률 (CME 페드워치 · 10/16 블록미디어)</span></div>
+  <h3>미 10년물 5.09%…FOMC 동결 확률 85%, 22일엔 금통위</h3>
+  <p class="txt">16일 미국 10년물 국채금리는 0.03%포인트 올라 5.09%를 기록했습니다(이투데이). 블록미디어에 따르면 케빈 워시 연준 의장은 IMF 행사에서 추가 인상에 대한 뚜렷한 신호를 주지 않았고, CME 페드워치는 27~28일 FOMC의 동결 확률을 85%로 반영했습니다. 미국 정부가 2026 회계연도에 낸 순이자 비용은 사상 최대인 1조 500억 달러였습니다(X @FirstSquawk). 국내에서는 22일 한국은행 금통위가 열려, 폭락 뒤 반등한 증시와 유가·환율을 함께 놓고 판단하게 됩니다.</p>
+  <div class="foot"><span class="srcs"><a class="src" href="https://www.blockmedia.co.kr/archives/1152761" target="_blank" rel="noopener">블록미디어 ↗</a><a class="src" href="https://www.etoday.co.kr/news/view/2636885" target="_blank" rel="noopener">이투데이 ↗</a><a class="src" href="https://x.com/FirstSquawk/status/2111168385614831869" target="_blank" rel="noopener">X @FirstSquawk · 순이자 ↗</a></span></div>
+</article>
+  </div>
+</section>
+<section class="sec">
+  <div class="sechead"><h2>세계 경제</h2><span class="hint">옆으로 넘겨 보세요 →</span></div>
+  <div class="rail" tabindex="0" aria-label="세계 경제 카드">
+<article class="card" data-title="유로존 9월 물가 3.8%…에너지 18.9% 뛰었다">
+  <div class="meta"><span class="tag">세계 경제</span><span class="cnt">1 / 2</span></div>
+  <div class="key"><span class="kv">3.8%</span><span class="kl">유로존 9월 소비자물가 (작년 9월 대비 · 10/16 유로스타트 확정)</span></div>
+  <h3>유로존 9월 물가 3.8%…에너지 18.9% 뛰었다</h3>
+  <p class="txt">유로스타트는 16일 유로존의 9월 물가 상승률이 3.8%로 8월(3.2%)과 1년 전(2.2%)보다 크게 높아졌다고 확정 발표했습니다. 에너지 물가가 18.9% 뛰어 전체 상승률 가운데 1.71%포인트를 차지했고, 서비스는 3.2%였으며 27개 회원국 중 23곳에서 물가가 올랐습니다. 유럽중앙은행(ECB)은 이미 9월에 에너지 충격을 이유로 기준금리를 2.5%로 올렸고(CNBC), 10월 속보치는 11월 4일 나옵니다. 유럽의 고물가와 금리 인상은 유럽 수요 둔화로 이어져, 자동차·배터리 등 한국의 대유럽 수출에 부담이 될 수 있습니다.</p>
+  <div class="foot"><span class="srcs"><a class="src" href="https://ec.europa.eu/eurostat/web/products-euro-indicators/w/2-16102026-ap" target="_blank" rel="noopener">유로스타트 ↗</a><a class="src" href="https://www.cnbc.com/2026/09/10/ecb-interest-rate-hike-lagarde-iran.html" target="_blank" rel="noopener">CNBC · ECB 9월 인상 ↗</a></span></div>
+</article>
+<article class="card" data-title="중국 3분기 성장률 19일 발표…예상 4.4%, 목표 밑돌 듯">
+  <div class="meta"><span class="tag">세계 경제</span><span class="cnt">2 / 2</span></div>
+  <div class="key"><span class="kv">4.4%</span><span class="kl">중국 3분기 GDP 성장률 예상치 (로이터 이코노미스트 50명 · 10/15)</span></div>
+  <h3>중국 3분기 성장률 19일 발표…예상 4.4%, 목표 밑돌 듯</h3>
+  <p class="txt">로이터가 이코노미스트 50명에게 물은 결과, 19일 발표되는 중국 3분기 GDP 성장률은 작년보다 4.4%로 2분기(4.3%)보다 조금 오르겠지만 올해 목표(4.5~5%)의 아래쪽에도 못 미칠 전망입니다. 블룸버그도 늦어진 부양책 탓에 두 분기 연속 목표 아래 성장이 예상된다고 전했습니다. 중국은 인프라 투자를 위해 쓰지 않은 지방정부 채권 한도 5,500억 위안을 배정했고, 같은 날 9월 소매판매·산업생산·고정자산투자도 함께 나옵니다. 중국은 한국의 최대 수출 시장인 만큼, 숫자가 약하게 나오면 석유화학·철강·소비재 수출 전망과 원화에 부담이 될 수 있습니다.</p>
+  <div class="foot"><span class="srcs"><a class="src" href="https://finance.yahoo.com/economy/articles/china-q3-growth-set-pick-092516257.html" target="_blank" rel="noopener">로이터 (Yahoo Finance) ↗</a><a class="src" href="https://www.bloomberg.com/news/articles/2026-10-16/tardy-china-stimulus-sets-up-second-quarter-of-sub-target-growth" target="_blank" rel="noopener">블룸버그 ↗</a><a class="src" href="https://www.newspim.com/news/view/20261016000037" target="_blank" rel="noopener">뉴스핌 중국증시 ↗</a></span></div>
+</article>
+  </div>
+</section>
+<section class="sec short">
+  <div class="sechead"><h2>국내·북한</h2><span class="hint"></span></div>
+  <div class="rail" tabindex="0" aria-label="국내·북한 카드">
+<article class="card" data-title="북한, 남측 극초음속 시험에 “과학적 해명 없는 변명” 담화">
+  <div class="meta"><span class="tag">국내·북한</span><span class="cnt">1 / 3</span></div>
+  <h3>북한, 남측 극초음속 시험에 “과학적 해명 없는 변명” 담화</h3>
+  <p class="txt">북한 김정식 노동당 군수공업부 제1부부장은 16일 조선중앙통신 담화에서, 국방과학연구소가 8일 시험한 국산 극초음속 활공체에 그을음이 없었다는 국방부 설명을 ‘과학적 해명이 부족한 변명’이라고 비난했습니다(뉴스핌). 전날 장창하 미사일총국장에 이은 이틀 연속 담화로, 남측의 성능 개량 계획을 자신들의 국방력 강화 명분으로 삼았습니다.</p>
+  <div class="foot"><span class="srcs"><a class="src" href="https://www.newspim.com/news/view/20261016001424" target="_blank" rel="noopener">뉴스핌 ↗</a></span></div>
+</article>
+<article class="card" data-title="국감 곳곳 충돌…이 대통령 재판 중단, 이재용·최태원 증인 채택">
+  <div class="meta"><span class="tag">국내·북한</span><span class="cnt">2 / 3</span></div>
+  <h3>국감 곳곳 충돌…이 대통령 재판 중단, 이재용·최태원 증인 채택</h3>
+  <p class="txt">16일 법사위 서울고법 국감에서는 이재명 대통령 공직선거법 사건 파기환송심이 사실상 멈춘 문제로 여야가 맞섰고, 기후노동위에서는 국민의힘이 호남 반도체 사업과 관련해 이재용·최태원 회장 증인 채택을 요구했습니다(파이낸셜뉴스). 복지위에서는 10년간 미지급된 건강보험 국고지원금이 약 20조 원에 이르고 적립금이 2029년쯤 바닥날 수 있다는 지적이 나왔습니다.</p>
+  <div class="foot"><span class="srcs"><a class="src" href="https://www.fnnews.com/news/202610161334400893" target="_blank" rel="noopener">파이낸셜뉴스 ↗</a></span></div>
+</article>
+<article class="card" data-title="석유 최고가격 11차도 동결…휘발유 1,784원 4주 더">
+  <div class="meta"><span class="tag">국내·북한</span><span class="cnt">3 / 3</span></div>
+  <h3>석유 최고가격 11차도 동결…휘발유 1,784원 4주 더</h3>
+  <p class="txt">산업통상부는 16일 11차 석유 최고가격을 동결해 오늘(17일) 0시부터 4주간 리터당 휘발유 1,784원, 경유 1,773원, 등유 1,380원을 유지한다고 밝혔습니다(뉴스웍스). 8차부터 넉 차례 연속 동결로, 16일 오후 4시 전국 평균 주유소 가격은 휘발유 1,856.50원·경유 1,842.74원이었습니다.</p>
+  <div class="foot"><span class="srcs"><a class="src" href="https://www.newsworks.co.kr/news/articleView.html?idxno=856763" target="_blank" rel="noopener">뉴스웍스 ↗</a><a class="src" href="https://seoul.co.kr/news/economy/2026/10/16/20261016500280" target="_blank" rel="noopener">서울신문 ↗</a></span></div>
+</article>
+  </div>
+</section>
+
+  
+</div></div>
+
+
+
+</body></html>
