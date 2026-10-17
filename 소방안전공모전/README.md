@@ -46,7 +46,7 @@
 flowchart LR
     A[공모전 데이터] --> B[사고 없는 날은<br/>'사고 없음'으로 표시]
     B --> C[숫자 범위 맞추기<br/>표준화]
-    C --> D[학습용 / 검증용 분리]
+    C --> D[학습용 / 검증용<br/>분리]
     D --> F1[DecisionTree]
     D --> F2[RandomForest]
     D --> F3[SVM]

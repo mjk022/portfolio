@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>연극·뮤지컬 추천</title>
+<style>
+  :root { --bg:#fbfaf7; --fg:#1f2328; --muted:#59636e; --card:#ffffff; --line:#d8dee4; --accent:#8a3ffc; --hl:#fff3c4; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#0d1117; --fg:#e6edf3; --muted:#9198a1; --card:#161b22; --line:#30363d; --accent:#c69bff; --hl:#3d3413; } }
+  body { margin:0; background:var(--bg); color:var(--fg); font-family:-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif; line-height:1.6; }
+  main { max-width:1040px; margin:0 auto; padding:32px 16px 64px; }
+  h1 { font-size:1.6rem; margin:0 0 8px; }
+  p.lead { color:var(--muted); margin:0 0 24px; }
+  .tabs { display:flex; gap:8px; margin:0 0 16px; flex-wrap:wrap; }
+  .tabs button { font:inherit; padding:8px 16px; border-radius:999px; border:1px solid var(--line); background:var(--card); color:var(--fg); cursor:pointer; }
+  .tabs button[aria-selected="true"] { border-color:var(--accent); color:var(--accent); font-weight:600; }
+  .panel { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px; }
+  .panel[hidden] { display:none; }
+  label { display:block; font-weight:600; margin-bottom:6px; }
+  select { font:inherit; width:100%; max-width:520px; padding:8px; border-radius:6px; border:1px solid var(--line); background:var(--bg); color:var(--fg); }
+  .desc { color:var(--muted); font-size:.9rem; margin:8px 0 0; }
+  .query { display:flex; gap:16px; align-items:center; margin:20px 0 8px; flex-wrap:wrap; }
+  .query img { width:120px; border-radius:6px; border:1px solid var(--line); }
+  .query h2 { font-size:1.1rem; margin:0; }
+  .query h2 b { background:var(--hl); padding:0 4px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px; margin-top:12px; }
+  .item { border:1px solid var(--line); border-radius:8px; overflow:hidden; background:var(--bg); }
+  .item img { width:100%; aspect-ratio:3/4; object-fit:cover; display:block; background:var(--line); }
+  .item div { padding:8px; font-size:.85rem; }
+  .item .rank { color:var(--accent); font-weight:700; }
+  .item .score { color:var(--muted); font-size:.8rem; }
+  .seen { margin:12px 0 0; padding-left:18px; font-size:.9rem; color:var(--muted); }
+  a { color:var(--accent); }
+  .note { color:var(--muted); font-size:.85rem; margin-top:24px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>연극·뮤지컬 맞춤 추천</h1>
+  <p class="lead">공연의 장르, 포스터, 줄거리, 관객 별점을 분석해 연극과 뮤지컬을 추천합니다.<br>
+  관람 기록이 없는 신규 고객과 별점 기록이 있는 기존 고객을 위한 두 가지 추천 방식을 체험할 수 있습니다.</p>
+
+  <div class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" aria-controls="p-new" id="t-new">신규 고객: 좋아하는 공연으로 추천</button>
+    <button role="tab" aria-selected="false" aria-controls="p-user" id="t-user">기존 고객: 별점 기록으로 추천</button>
+  </div>
+
+  <section class="panel" id="p-new" role="tabpanel" aria-labelledby="t-new">
+    <label for="sel-new">좋아하는 공연을 하나 고르세요</label>
+    <select id="sel-new"></select>
+    <p class="desc">장르 특징(AutoEncoder), 포스터·줄거리 특징(Show and Tell), 주 관객층의 성별·연령을 이어 붙인 벡터에서<br>
+    유클리드 거리가 가장 가까운 공연 10개를 보여 줍니다. 거리가 작을수록 비슷합니다.</p>
+    <div id="out-new"></div>
+  </section>
+
+  <section class="panel" id="p-user" role="tabpanel" aria-labelledby="t-user" hidden>
+    <label for="sel-user">사용자를 고르세요</label>
+    <select id="sel-user"></select>
+    <p class="desc">취향이 비슷한 사람들의 별점(협업 필터링) 점수와, 사용자가 가장 높은 별점을 준 공연과의 유사도(장르·줄거리·포스터·배우) 점수를<br>
+    합쳐 아직 보지 않은 공연 10개를 추천합니다.</p>
+    <div id="out-user"></div>
+  </section>
+
+  <p class="note">추천 결과는 프로젝트의 Django 웹사이트와 같은 코드로 미리 계산해 두었습니다.<br>
+  기존 고객 예시는 별점을 11개 이상 남긴 실제 관객의 기록이며, 개인정보 보호를 위해 아이디를 "사용자 N"으로 바꿨습니다.<br>
+  프로젝트 설명: <a href="https://github.com/mjk022/portfolio/tree/main/추천시스템">github.com/mjk022/portfolio — 추천시스템</a></p>
+</main>
+<script src="data.js"></script>
+<script>
+const D = window.RECOMM;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const card = (x, i, label) => `<div class="item">${x.img ? `<img src="${x.img}" alt="${esc(x.title)} 포스터" loading="lazy">` : ''}
+  <div><span class="rank">${i + 1}위</span> ${esc(x.title)}<br><span class="score">${label}</span></div></div>`;
+
+const selNew = document.getElementById('sel-new');
+Object.keys(D.new).sort((a, b) => a.localeCompare(b, 'ko')).forEach(t => selNew.add(new Option(t, t)));
+function showNew() {
+  const t = selNew.value, recs = D.new[t];
+  document.getElementById('out-new').innerHTML =
+    `<div class="query">${D.posters[t] ? `<img src="${D.posters[t]}" alt="${esc(t)} 포스터">` : ''}
+     <h2><b>${esc(t)}</b>을(를) 좋아한 분께 가장 추천하는 공연은<br>${esc(recs[0].title)}</h2></div>
+     <div class="grid">${recs.map((x, i) => card(x, i, '거리 ' + x.dist.toFixed(3))).join('')}</div>`;
+}
+const pick = Object.keys(D.new).find(t => t.includes('오페라의 유령'));
+if (pick) selNew.value = pick;
+selNew.addEventListener('change', showNew);
+
+const selUser = document.getElementById('sel-user');
+D.users.forEach((u, i) => selUser.add(new Option(`${u.name} (관람 ${u.seen.length}편)`, i)));
+function showUser() {
+  const u = D.users[selUser.value];
+  document.getElementById('out-user').innerHTML =
+    `<div class="query"><h2><b>${esc(u.name)}</b>님께 가장 추천하는 공연은<br>${esc(u.recs[0].title)}</h2></div>
+     <details><summary>이 사용자가 별점을 남긴 공연 ${u.seen.length}편</summary>
+     <ul class="seen">${u.seen.map(s => `<li>${esc(s.title)} (별점 ${s.star})</li>`).join('')}</ul></details>
+     <div class="grid">${u.recs.map((x, i) => card(x, i, '점수 ' + x.score.toFixed(3))).join('')}</div>`;
+}
+selUser.addEventListener('change', showUser);
+
+document.querySelectorAll('[role=tab]').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('[role=tab]').forEach(x => {
+    const on = x === b;
+    x.setAttribute('aria-selected', on);
+    document.getElementById(x.getAttribute('aria-controls')).hidden = !on;
+  });
+}));
+showNew(); showUser();
+</script>
+</body>
+</html>

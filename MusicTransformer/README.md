@@ -71,11 +71,11 @@ Decoder-only 구조임을 확인하고,<br>
 flowchart LR
     A[MAESTRO<br/>피아노 연주 데이터] --> B[쇼팽 곡만 선별]
     B --> C[MIDI → 숫자 토큰]
-    C --> D[Music Transformer 학습]
-    E[캐롤 MIDI] --> F[첫 부분을 토큰으로]
+    C --> D[Music Transformer<br/>학습]
+    E[캐롤 MIDI] --> F[첫 부분을<br/>토큰으로]
     D --> G[다음 음 예측을<br/>1024번 반복]
     F --> G
-    G --> H[쇼팽풍 캐롤 MIDI]
+    G --> H[쇼팽풍<br/>캐롤 MIDI]
 ```
 
 **① 기본 예제 재현**
