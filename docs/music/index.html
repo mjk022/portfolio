@@ -14,6 +14,7 @@
   .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px; margin:12px 0; }
   .card h3 { margin:0 0 4px; font-size:1rem; }
   .card .tag { display:inline-block; font-size:.8rem; padding:1px 8px; border-radius:999px; border:1px solid var(--accent); color:var(--accent); margin-bottom:8px; }
+  .lbl { font-size:.85rem; font-weight:600; margin:12px 0 0; }
   .card p { margin:4px 0 8px; color:var(--muted); font-size:.92rem; }
   midi-player { display:block; width:100%; margin:8px 0; }
   midi-visualizer { display:block; overflow-x:auto; background:var(--bg); border-radius:6px; }
@@ -25,37 +26,58 @@
 <main>
   <h1>쇼팽 연주로 학습한 Music Transformer 생성곡</h1>
   <p class="lead">MAESTRO 데이터셋의 쇼팽 피아노 연주로 학습한 모델이 만든 곡입니다.<br>
+  샘플마다 가장 비슷한 쇼팽 원곡 구간을 함께 두어 바로 비교해 들을 수 있습니다.<br>
   ▶ 버튼을 누르면 브라우저에서 바로 피아노 소리로 재생됩니다.<br>
   처음 재생할 때는 피아노 음원을 불러오느라 몇 초 걸릴 수 있습니다.</p>
 
   <div class="card"><span class="tag">대부분 새로 만든 음</span><h3>샘플 1 · 59초</h3>
-    <p>MAESTRO의 쇼팽 연주 201곡과 비교했을 때 같은 음이 나오는 비율이 약 21% 이하입니다.</p>
-    <midi-player src="chopin_style_7.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander" visualizer="#v1"></midi-player>
-    <midi-visualizer type="piano-roll" id="v1" src="chopin_style_7.mid"></midi-visualizer></div>
+    <p>가장 비슷한 쇼팽 연주와도 겹치는 음이 약 21% 이하입니다.</p>
+    <div class="lbl">생성곡</div>
+    <midi-player src="chopin_style_7.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander" visualizer="#g1"></midi-player>
+    <midi-visualizer type="piano-roll" id="g1" src="chopin_style_7.mid"></midi-visualizer>
+    <div class="lbl">비교 원곡 · 쇼팽 에튀드 Op.25 전곡 연주, 18:04~19:04 구간 (MAESTRO 연주)</div>
+    <midi-player src="original_for_7.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander" visualizer="#o1"></midi-player>
+    <midi-visualizer type="piano-roll" id="o1" src="original_for_7.mid"></midi-visualizer></div>
 
   <div class="card"><span class="tag">대부분 새로 만든 음</span><h3>샘플 2 · 26초</h3>
-    <p>쇼팽 원곡과 겹치는 음은 약 14%입니다.</p>
-    <midi-player src="chopin_style_9.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander" visualizer="#v2"></midi-player>
-    <midi-visualizer type="piano-roll" id="v2" src="chopin_style_9.mid"></midi-visualizer></div>
+    <p>가장 비슷한 쇼팽 연주와도 겹치는 음이 약 14% 이하입니다.</p>
+    <div class="lbl">생성곡</div>
+    <midi-player src="chopin_style_9.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander" visualizer="#g2"></midi-player>
+    <midi-visualizer type="piano-roll" id="g2" src="chopin_style_9.mid"></midi-visualizer>
+    <div class="lbl">비교 원곡 · 쇼팽 에튀드 Op.25 No.10, 0:22~0:50 구간 (MAESTRO 연주)</div>
+    <midi-player src="original_for_9.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander" visualizer="#o2"></midi-player>
+    <midi-visualizer type="piano-roll" id="o2" src="original_for_9.mid"></midi-visualizer></div>
 
-  <div class="card"><span class="tag">원곡 도입부 + 새 음</span><h3>샘플 3 · 26초</h3>
-    <p>앞부분은 에튀드 Op.25 No.5의 도입부와 같고(앞 1/4 구간 65% 일치),<br>
-    그 뒤로는 겹치는 음이 2~22%로 줄어 모델이 새로 이어 간 부분입니다.</p>
-    <midi-player src="chopin_style_22.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander" visualizer="#v3"></midi-player>
-    <midi-visualizer type="piano-roll" id="v3" src="chopin_style_22.mid"></midi-visualizer></div>
+  <div class="card"><span class="tag">원곡 일부 + 새 음</span><h3>샘플 3 · 26초</h3>
+    <p>앞부분은 아래 원곡 구간과 같고(앞 1/4 구간 65% 일치),<br>그 뒤로는 겹치는 음이 2~22%로 줄어 모델이 새로 이어 간 부분입니다.</p>
+    <div class="lbl">생성곡</div>
+    <midi-player src="chopin_style_22.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander" visualizer="#g3"></midi-player>
+    <midi-visualizer type="piano-roll" id="g3" src="chopin_style_22.mid"></midi-visualizer>
+    <div class="lbl">비교 원곡 · 쇼팽 에튀드 Op.25 No.5, 2:43~3:04 구간 (MAESTRO 연주)</div>
+    <midi-player src="original_for_22.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander" visualizer="#o3"></midi-player>
+    <midi-visualizer type="piano-roll" id="o3" src="original_for_22.mid"></midi-visualizer></div>
 
   <div class="card"><span class="tag">대부분 원곡과 같음</span><h3>샘플 4 · 14초</h3>
-    <p>처음 3/4은 에튀드 Op.25 No.11과 59~73% 같고, 마지막 1/4만 새로 만든 음입니다.</p>
-    <midi-player src="chopin_style_27.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander" visualizer="#v4"></midi-player>
-    <midi-visualizer type="piano-roll" id="v4" src="chopin_style_27.mid"></midi-visualizer></div>
+    <p>처음 3/4은 아래 원곡 구간과 59~73% 같고, 마지막 1/4만 새로 만든 음입니다.</p>
+    <div class="lbl">생성곡</div>
+    <midi-player src="chopin_style_27.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander" visualizer="#g4"></midi-player>
+    <midi-visualizer type="piano-roll" id="g4" src="chopin_style_27.mid"></midi-visualizer>
+    <div class="lbl">비교 원곡 · 쇼팽 에튀드 Op.25 No.11, 3:25~3:39 구간 (MAESTRO 연주)</div>
+    <midi-player src="original_for_27.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander" visualizer="#o4"></midi-player>
+    <midi-visualizer type="piano-roll" id="o4" src="original_for_27.mid"></midi-visualizer></div>
 
   <div class="card"><span class="tag">대부분 새로 만든 음</span><h3>샘플 5 · 77초</h3>
-    <p>쇼팽 원곡과 겹치는 음은 약 15%입니다.</p>
-    <midi-player src="chopin_style_111.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander" visualizer="#v5"></midi-player>
-    <midi-visualizer type="piano-roll" id="v5" src="chopin_style_111.mid"></midi-visualizer></div>
+    <p>가장 비슷한 쇼팽 연주와도 겹치는 음이 약 15%입니다.</p>
+    <div class="lbl">생성곡</div>
+    <midi-player src="chopin_style_111.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander" visualizer="#g5"></midi-player>
+    <midi-visualizer type="piano-roll" id="g5" src="chopin_style_111.mid"></midi-visualizer>
+    <div class="lbl">비교 원곡 · 쇼팽 에튀드 Op.25 No.6, 0:22~1:44 구간 (MAESTRO 연주)</div>
+    <midi-player src="original_for_111.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander" visualizer="#o5"></midi-player>
+    <midi-visualizer type="piano-roll" id="o5" src="original_for_111.mid"></midi-visualizer></div>
 
   <p class="note">겹치는 음 비율: 샘플을 MAESTRO의 쇼팽 연주 201곡 각각과 시간을 맞춰 겹쳐 보고,<br>
   같은 높이의 음이 같은 시점(±0.05초)에 나오는 음표의 비율이 가장 높은 곡을 기준으로 계산했습니다.<br>
+  비교 원곡은 그 곡에서 샘플과 가장 잘 맞는 위치를 샘플 길이만큼 잘라 낸 것입니다.<br>
   프로젝트 설명: <a href="https://github.com/mjk022/portfolio/tree/main/MusicTransformer">github.com/mjk022/portfolio — MusicTransformer</a><br>
   재생: html-midi-player (Magenta.js), 피아노 음원: Salamander Grand Piano.</p>
 </main>

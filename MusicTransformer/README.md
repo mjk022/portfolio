@@ -123,13 +123,16 @@ Keras 공식 예제를 그대로 실행해,<br>
 
 쇼팽 연주로 학습한 모델이 만든 5곡을 MAESTRO의 쇼팽 연주 201곡과 대조한 결과입니다.
 
-| 샘플 | 길이 | 쇼팽 원곡과 겹치는 음 | 해석 |
-|---|---|---|---|
-| 샘플 1 | 59초 | 약 21% 이하 | 대부분 새로 만든 음 |
-| 샘플 2 | 26초 | 약 14% | 대부분 새로 만든 음 |
-| 샘플 3 | 26초 | 앞 1/4 구간 65%,<br>이후 2~22% | 에튀드 Op.25 No.5 도입부로 시작한 뒤<br>새로 이어 감 |
-| 샘플 4 | 14초 | 앞 3/4 구간 59~73%,<br>마지막 1/4 0% | 대부분 에튀드 Op.25 No.11과 같고<br>끝부분만 새로 생성 |
-| 샘플 5 | 77초 | 약 15% | 대부분 새로 만든 음 |
+| 샘플 | 길이 | 비교 원곡 구간 (MAESTRO) | 겹치는 음 | 해석 |
+|---|---|---|---|---|
+| 샘플 1 | 59초 | 에튀드 Op.25 전곡 연주<br>18:04~19:04 | 약 21% 이하 | 대부분 새로 만든 음 |
+| 샘플 2 | 26초 | 에튀드 Op.25 No.10<br>0:22~0:50 | 약 14% 이하 | 대부분 새로 만든 음 |
+| 샘플 3 | 26초 | 에튀드 Op.25 No.5<br>2:43~3:04 | 앞 1/4 구간 65%,<br>이후 2~22% | 원곡 일부로 시작한 뒤<br>새로 이어 감 |
+| 샘플 4 | 14초 | 에튀드 Op.25 No.11<br>3:25~3:39 | 앞 3/4 구간 59~73%,<br>마지막 1/4 0% | 대부분 원곡과 같고<br>끝부분만 새로 생성 |
+| 샘플 5 | 77초 | 에튀드 Op.25 No.6<br>0:22~1:44 | 약 15% | 대부분 새로 만든 음 |
+
+비교 원곡 구간은 각 샘플과 가장 잘 맞는 쇼팽 연주에서 샘플 길이만큼 잘라 낸 것으로,<br>
+듣기 페이지에서 생성곡 바로 아래에 두어 함께 들어볼 수 있습니다.
 
 ## 한계 및 개선 방향
 
@@ -146,13 +149,15 @@ Keras 공식 예제를 그대로 실행해,<br>
 |---|---|
 | `music_transformer_chopin_carol.ipynb` | 쇼팽 곡 선별 → 학습 → 캐롤 프롬프트 기반 생성 |
 | `samples/chopin_style_*.mid` | 쇼팽 스타일 생성곡 5곡 |
+| `samples/originals/original_for_*.mid` | 생성곡마다 가장 비슷한 MAESTRO 쇼팽 연주 구간 |
 | `images/` | 발표 자료 중 주요 슬라이드 |
 
 ## 참고
 
 - 기반 코드: Keras 예제 [Music Generation with Transformer Models](https://keras.io/examples/generative/midi_generation_with_transformer/)
 - 논문: Huang et al., [Music Transformer](https://arxiv.org/abs/1809.04281) (2018)
-- 데이터: [MAESTRO v3](https://magenta.tensorflow.org/datasets/maestro) (CC BY-NC-SA 4.0)
+- 데이터: [MAESTRO v3](https://magenta.tensorflow.org/datasets/maestro) (CC BY-NC-SA 4.0)<br>
+  `samples/originals/`의 비교 구간은 MAESTRO 연주 MIDI를 잘라 낸 것으로, 같은 라이선스를 따릅니다.
 - 실행 환경: Google Colab (GPU), Keras 3<br>
   MAESTRO zip과 캐롤 MIDI zip은 Colab에 직접 올려야 합니다. 캐롤 원곡 MIDI는 포함하지 않았습니다.
 - 노트북의 `mozart_*` 변수명은 이전 실험의 흔적이며, 실제로는 쇼팽 곡으로 필터링합니다.
