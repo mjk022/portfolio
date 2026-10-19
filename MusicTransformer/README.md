@@ -149,7 +149,7 @@ Keras 공식 예제를 그대로 실행해,<br>
 |---|---|
 | `music_transformer_chopin_carol.ipynb` | 쇼팽 곡 선별 → 학습 → 캐롤 프롬프트 기반 생성 |
 | `samples/chopin_style_*.mid` | 쇼팽 스타일 생성곡 5곡 |
-| `samples/originals/original_for_*.mid` | 생성곡마다 가장 비슷한 MAESTRO 쇼팽 연주 구간 |
+| `samples/originals/original_for_*.mid` | 생성곡마다 가장 비슷한 MAESTRO 쇼팽 연주 구간<br>(웹 재생 속도를 위해 음량을 4단계로 단순화) |
 | `images/` | 발표 자료 중 주요 슬라이드 |
 
 ## 참고

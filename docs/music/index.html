@@ -28,7 +28,8 @@
   <p class="lead">MAESTRO 데이터셋의 쇼팽 피아노 연주로 학습한 모델이 만든 곡입니다.<br>
   샘플마다 가장 비슷한 쇼팽 원곡 구간을 함께 두어 바로 비교해 들을 수 있습니다.<br>
   ▶ 버튼을 누르면 브라우저에서 바로 피아노 소리로 재생됩니다.<br>
-  처음 재생할 때는 피아노 음원을 불러오느라 몇 초 걸릴 수 있습니다.</p>
+  페이지를 열면 피아노 음원을 미리 불러오기 시작합니다.<br>
+  열자마자 누르면 원곡 구간은 재생까지 30초 정도 걸릴 수 있습니다.</p>
 
   <div class="card"><span class="tag">대부분 새로 만든 음</span><h3>샘플 1 · 59초</h3>
     <p>가장 비슷한 쇼팽 연주와도 겹치는 음이 약 21% 이하입니다.</p>
@@ -83,13 +84,27 @@
 </main>
 <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.5.0"></script>
 <script>
-// The Salamander soundfont only has program 0; the MIDI files use program 1, which plays silently otherwise.
+// The Salamander soundfont only has program 0 (other programs play silently), and it fetches one sample file
+// per pitch x velocity level, so recorded performances with many velocities take minutes to load.
+// Map every note to program 0 and 4 velocity levels, the same way for generated and original files.
+const LEVELS = [39, 63, 87, 111];
 document.querySelectorAll('midi-player').forEach(p => p.addEventListener('load', () => {
   const ns = p.noteSequence;
-  if (!ns || ns.notes.every(n => !n.program && !n.isDrum)) return;
-  ns.notes.forEach(n => { n.program = 0; n.isDrum = false; });
+  if (!ns || p.dataset.prepared) return;
+  p.dataset.prepared = '1';
+  ns.notes.forEach(n => {
+    n.program = 0; n.isDrum = false;
+    n.velocity = LEVELS.reduce((a, b) => Math.abs(b - n.velocity) < Math.abs(a - n.velocity) ? b : a);
+  });
   p.noteSequence = ns;
+  warm(ns);
 }));
+// Fetch the needed piano samples in the background, one file at a time, so the first ▶ press starts quickly.
+let queue = Promise.resolve();
+function warm(ns) {
+  queue = queue.then(() => new core.SoundFontPlayer(p0sf).loadSamples(ns)).catch(() => {});
+}
+const p0sf = 'https://storage.googleapis.com/magentadata/js/soundfonts/salamander';
 </script>
 </body>
 </html>
