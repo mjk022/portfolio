@@ -22,7 +22,7 @@
 | 프로젝트 | 구분 | 분야 | 한 줄 요약 | 핵심 기술 |
 |---|---|---|---|---|
 | [아파트<br>매매가격 예측](./아파트매매가격예측) | 논문 | 시계열, NLP | 생성 AI로 만든 뉴스 감성 지수로<br>아파트 가격 예측, 웹사이트 구현 | KoBART, ChatGPT,<br>LSTM, VAR, Django |
-| [Music Transformer](./MusicTransformer) | 대학원<br>수업 | 음악 생성<br>모델 | 쇼팽 연주로 학습한 모델로 곡을 생성하고<br>원곡과 대조해 검증 | Keras, Transformer |
+| [Music Transformer](./MusicTransformer) | 대학원<br>수업 | 음악 생성<br>모델 | 쇼팽으로 학습한 모델에 캐롤을 추가 학습해<br>이어 연주하고 원곡과 대조해 검증 | Keras, Transformer |
 | [YOLO v1](./YOLO) | 학회 | 컴퓨터<br>비전 | 객체 탐지 모델 YOLO v1을<br>논문을 보고 직접 구현 | PyTorch |
 | [예상매출등급](./예상매출등급) | 공모전 | 머신러닝 | 서울 음식점의<br>미래 매출등급 예측<br>(2023 빅콘테스트) | ExtraTrees,<br>공공데이터 결합 |
 | [광진구 CCTV](./광진구CCTV) | 공모전 | 공간 분석 | 불법 주정차 단속 데이터로<br>CCTV 추가 설치 장소 선정<br>(2023 광진구 빅데이터 공모전) | K-means, PCA,<br>folium |
