@@ -44,9 +44,9 @@
 
 ```mermaid
 flowchart LR
-    A[공모전 데이터] --> B[사고 없는 날은<br/>'사고 없음'으로<br/>표시]
-    B --> C[숫자 범위 맞추기<br/>표준화]
-    C --> D[학습용 / 검증용<br/>분리]
+    A[공모전 데이터] --> B[사고 없는 날을<br/>사고 없음<br/>유형으로 표시]
+    B --> C[표준화로<br/>숫자 범위 통일]
+    C --> D[학습용과<br/>검증용 분리]
     D --> F1[DecisionTree]
     D --> F2[RandomForest]
     D --> F3[SVM]

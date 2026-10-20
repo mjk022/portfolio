@@ -27,7 +27,7 @@
 flowchart LR
     A[웹 뉴스 검색] --> D[Claude<br/>예약 루틴]
     B[X 계정 9곳<br/>Apify 수집] --> D
-    C[유튜브 채널 5곳<br/>Apify 수집] --> D
+    C[유튜브 5곳<br/>Apify 수집] --> D
     D --> E[주제별로<br/>묶고 요약]
     E --> F[카드뉴스<br/>웹페이지]
     E --> G[Notion<br/>일일 기록]

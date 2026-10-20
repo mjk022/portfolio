@@ -73,7 +73,7 @@ flowchart LR
     B --> C[MIDI → 숫자<br/>토큰]
     C --> D[Music<br/>Transformer<br/>학습]
     D --> G[다음 음 예측을<br/>반복해 곡 생성]
-    G --> H[원곡과 대조해<br/>새 음 비율 검증]
+    G --> H[원곡과<br/>대조해 검증]
 ```
 
 **① 기본 예제 재현**

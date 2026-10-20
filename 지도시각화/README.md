@@ -25,7 +25,7 @@
 flowchart LR
     A[서울 상가 정보<br/>공공데이터] --> B[업종별<br/>개수 확인]
     B --> C[커피점/카페만<br/>선택]
-    C --> D[구별로 개수 세기]
+    C --> D[구별 개수<br/>집계]
     D --> E1[점포 위치 표시<br/>MarkerCluster]
     D --> E2[구별 색칠<br/>Choropleth]
     E1 & E2 --> F[HTML 지도로<br/>저장]
