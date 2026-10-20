@@ -70,7 +70,7 @@ Decoder-only 구조임을 확인하고,<br>
 ```mermaid
 flowchart LR
     A[MAESTRO<br/>피아노 연주<br/>데이터] --> B[쇼팽 곡만 선별]
-    B --> C[MIDI → 숫자<br/>토큰]
+    B --> C[MIDI →<br/>숫자 토큰]
     C --> D[Music<br/>Transformer<br/>학습]
     D --> G[다음 음 예측을<br/>반복해 곡 생성]
     G --> H[원곡과<br/>대조해 검증]
