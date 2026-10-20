@@ -38,10 +38,10 @@
 
 ```mermaid
 flowchart LR
-    A[네이버 부동산 뉴스<br/>30,600건 수집] --> B[KoBART로 요약]
-    B --> C[ChatGPT로<br/>감성 판단<br/>긍정 +1 · 중립 0<br/>부정 -1]
+    A[네이버 부동산<br/>뉴스<br/>30,600건 수집] --> B[KoBART로 요약]
+    B --> C[ChatGPT로<br/>감성 판단<br/>긍정 +1<br/>중립 0<br/>부정 -1]
     C --> D[월별로 합산<br/>뉴스 감성 지수<br/>NSI]
-    E[경제 지표<br/>기준금리·GDP<br/>대출금리·거래량] --> F[예측 모델<br/>학습]
+    E[경제 지표<br/>기준금리·GDP<br/>대출금리<br/>거래량] --> F[예측 모델<br/>학습]
     D --> F
     F --> G1[LSTM]
     F --> G2[VAR]
@@ -145,7 +145,7 @@ flowchart LR
     M --> R[매매가격지수<br/>예측값]
     U --> L[LDA<br/>월별 뉴스 토픽]
     U --> A[Apart<br/>VAR 분석]
-    U --> P[map1~4<br/>실거래가 분위 지도]
+    U --> P[map1~4<br/>실거래가 분위<br/>지도]
 ```
 
 **로컬에서 Django로 실행하기**
