@@ -10,6 +10,7 @@
   body { word-break:keep-all; overflow-wrap:break-word; margin:0; background:var(--bg); color:var(--fg); font-family:-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif; line-height:1.6; }
   main { max-width:960px; margin:0 auto; padding:32px 16px 64px; }
   h1 { font-size:1.6rem; margin:0 0 8px; }
+  h2 { font-size:1.2rem; margin:36px 0 8px; }
   p.lead { color:var(--muted); margin:0 0 24px; }
   .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px; margin:12px 0; }
   .card h3 { margin:0 0 4px; font-size:1rem; }
@@ -26,11 +27,25 @@
 <main>
   <h1>쇼팽 연주로 학습한 Music Transformer 생성곡</h1>
   <p class="lead">MAESTRO 데이터셋의 쇼팽 피아노 연주로 학습한 모델이 만든 곡입니다.<br>
-  샘플마다 가장 비슷한 쇼팽 원곡 구간을 함께 두어 바로 비교해 들을 수 있습니다.<br>
+  캐롤 이어 연주와, 샘플마다 가장 비슷한 쇼팽 원곡 구간을 함께 두어 바로 비교해 들을 수 있습니다.<br>
   ▶ 버튼을 누르면 브라우저에서 바로 피아노 소리로 재생됩니다.<br>
   페이지를 열면 피아노 음원을 미리 불러오기 시작합니다.<br>
   열자마자 누르면 원곡 구간은 재생까지 30초 정도 걸릴 수 있습니다.</p>
 
+  <h2>캐롤 이어 연주 · Christmas Without You</h2>
+  <div class="card"><span class="tag">모델이 새로 만든 음</span><h3>원곡 앞부분 26초를 들려주고 31초를 이어서 연주</h3>
+    <p>모델이 이어 연주한 음표 166개 중 원곡과 같은 음은 0%이고,<br>쇼팽 학습 데이터와 겹치는 음도 가장 많은 곡 기준 21.7%로 새로 만든 연주입니다.</p>
+    <div class="lbl">① 모델에 들려준 원곡 앞부분 (0:00~0:26)</div>
+    <midi-player src="carol_prompt.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander" visualizer="#cp"></midi-player>
+    <midi-visualizer type="piano-roll" id="cp" src="carol_prompt.mid"></midi-visualizer>
+    <div class="lbl">② 모델이 이어서 연주한 부분 (31초)</div>
+    <midi-player src="carol_generated.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander" visualizer="#cg"></midi-player>
+    <midi-visualizer type="piano-roll" id="cg" src="carol_generated.mid"></midi-visualizer>
+    <div class="lbl">③ 비교: 원곡의 실제 다음 부분 (0:26~0:57)</div>
+    <midi-player src="carol_original_next.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander" visualizer="#co"></midi-player>
+    <midi-visualizer type="piano-roll" id="co" src="carol_original_next.mid"></midi-visualizer></div>
+
+  <h2>쇼팽 연주를 시작으로 생성한 샘플</h2>
   <div class="card"><span class="tag">대부분 새로 만든 음</span><h3>샘플 1 · 59초</h3>
     <p>가장 비슷한 쇼팽 연주와도 겹치는 음이 약 21% 이하입니다.</p>
     <div class="lbl">생성곡</div>
@@ -80,6 +95,7 @@
   같은 높이의 음이 같은 시점(±0.05초)에 나오는 음표의 비율이 가장 높은 곡을 기준으로 계산했습니다.<br>
   비교 원곡은 그 곡에서 샘플과 가장 잘 맞는 위치를 샘플 길이만큼 잘라 낸 것입니다.<br>
   프로젝트 설명: <a href="https://github.com/mjk022/portfolio/tree/main/MusicTransformer">github.com/mjk022/portfolio — MusicTransformer</a><br>
+  캐롤 원곡의 저작권은 원저작자에게 있으며, 비교를 위해 앞부분과 다음 부분만 포함했습니다.<br>
   재생: html-midi-player (Magenta.js), 피아노 음원: Salamander Grand Piano.</p>
 </main>
 <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.5.0"></script>
@@ -88,7 +104,8 @@
 // per pitch x velocity level, so recorded performances with many velocities take minutes to load.
 // Map every note to program 0 and 4 velocity levels, the same way for generated and original files.
 const LEVELS = [39, 63, 87, 111];
-document.querySelectorAll('midi-player').forEach(p => p.addEventListener('load', () => {
+const players = [...document.querySelectorAll('midi-player')];
+function prepare(p) {
   const ns = p.noteSequence;
   if (!ns || p.dataset.prepared) return;
   p.dataset.prepared = '1';
@@ -98,7 +115,13 @@ document.querySelectorAll('midi-player').forEach(p => p.addEventListener('load',
   });
   p.noteSequence = ns;
   warm(ns);
-}));
+}
+players.forEach(p => p.addEventListener('load', () => prepare(p)));
+// Some players finish loading without a 'load' event reaching us, so also check until every player is prepared.
+const poll = setInterval(() => {
+  players.forEach(prepare);
+  if (players.every(p => p.dataset.prepared)) clearInterval(poll);
+}, 500);
 // Fetch the needed piano samples in the background, one file at a time, so the first ▶ press starts quickly.
 let queue = Promise.resolve();
 function warm(ns) {
