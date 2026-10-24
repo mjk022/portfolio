@@ -33,25 +33,29 @@
   열자마자 누르면 원곡 구간은 재생까지 30초 정도 걸릴 수 있습니다.</p>
 
   <h2>캐롤 이어 연주 · Christmas Without You</h2>
-  <div class="card"><span class="tag">캐롤 파인튜닝 전/후</span><h3>원곡 앞부분 26초를 들려주고 이어서 연주</h3>
-    <p>쇼팽만 배운 모델과, 여기에 캐롤 35곡을 추가로 학습한 모델이<br>같은 캐롤 앞부분을 이어 연주한 결과입니다.
-    평가용인 이 곡은 추가 학습에서 뺐습니다.</p>
-    <p>추가 학습 뒤에는 음 구성이 원곡과 더 비슷해지고(유사도 0.54 → 0.87),<br>음역도 원곡과 같은 범위로 좁아졌습니다.
-    두 결과 모두 원곡·캐롤·쇼팽 데이터와 겹치는 음이 20% 안팎이라<br>베낀 것이 아니라 새로 만든 연주입니다.</p>
-    <div class="lbl">① 모델에 들려준 원곡 앞부분 (0:00~0:26)</div>
+  <div class="card"><span class="tag">다시 학습한 모델 · 단계별</span><h3>원곡 앞부분 18초를 들려주고 이어서 연주</h3>
+    <p>학습량을 약 85배 늘려 처음부터 다시 학습한 모델입니다.<br>MAESTRO 전체 → 쇼팽 → 캐롤 순서로 학습했고,
+    단계마다 같은 캐롤 앞부분을 이어 연주하게 했습니다.<br>평가용인 이 곡은 학습에서 뺐습니다.</p>
+    <p>캐롤까지 학습한 3단계 모델은 원곡의 조성(음 구성 유사도 0.90)과 음역,<br>빠르기(1초당 음표 5.2개, 원곡 4.7개)를 따라갑니다.
+    세 결과 모두 원곡·캐롤·쇼팽 데이터와 겹치는 음이 20% 안팎이라<br>베낀 것이 아니라 새로 만든 연주입니다.</p>
+    <div class="lbl">① 모델에 들려준 원곡 앞부분 (0:00~0:18)</div>
     <midi-player src="carol_prompt.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander" visualizer="#cp"></midi-player>
     <midi-visualizer type="piano-roll" id="cp" src="carol_prompt.mid"></midi-visualizer>
-    <div class="lbl">② 쇼팽만 배운 모델의 이어 연주 (30초)</div>
-    <midi-player src="carol_before_ft.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander" visualizer="#cb"></midi-player>
-    <midi-visualizer type="piano-roll" id="cb" src="carol_before_ft.mid"></midi-visualizer>
-    <div class="lbl">③ 캐롤을 추가 학습한 모델의 이어 연주 (71초)</div>
-    <midi-player src="carol_after_ft.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander" visualizer="#ca"></midi-player>
-    <midi-visualizer type="piano-roll" id="ca" src="carol_after_ft.mid"></midi-visualizer>
-    <div class="lbl">④ 비교: 원곡의 실제 다음 부분 (0:26~0:57)</div>
+    <div class="lbl">② 1단계: MAESTRO 전체로 학습한 모델 (19초)</div>
+    <midi-player src="carol_stage1_maestro.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander" visualizer="#c1"></midi-player>
+    <midi-visualizer type="piano-roll" id="c1" src="carol_stage1_maestro.mid"></midi-visualizer>
+    <div class="lbl">③ 2단계: 쇼팽을 추가 학습한 모델 (26초)</div>
+    <midi-player src="carol_stage2_chopin.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander" visualizer="#c2"></midi-player>
+    <midi-visualizer type="piano-roll" id="c2" src="carol_stage2_chopin.mid"></midi-visualizer>
+    <div class="lbl">④ 3단계: 캐롤까지 추가 학습한 모델 (27초)</div>
+    <midi-player src="carol_stage3_carol.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander" visualizer="#c3"></midi-player>
+    <midi-visualizer type="piano-roll" id="c3" src="carol_stage3_carol.mid"></midi-visualizer>
+    <div class="lbl">⑤ 비교: 원곡의 실제 다음 부분 (0:18~0:45)</div>
     <midi-player src="carol_original_next.mid" sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/salamander" visualizer="#co"></midi-player>
     <midi-visualizer type="piano-roll" id="co" src="carol_original_next.mid"></midi-visualizer></div>
 
   <h2>쇼팽 연주를 시작으로 생성한 샘플</h2>
+  <p class="note">아래 5곡은 다시 학습하기 전의 모델(300스텝)로 만든 결과입니다.</p>
   <div class="card"><span class="tag">대부분 새로 만든 음</span><h3>샘플 1 · 59초</h3>
     <p>가장 비슷한 쇼팽 연주와도 겹치는 음이 약 21% 이하입니다.</p>
     <div class="lbl">생성곡</div>
