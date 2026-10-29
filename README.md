@@ -45,4 +45,4 @@
 | 딥러닝 | PyTorch, TensorFlow / Keras |
 | 자연어 처리 | KoNLPy, gensim, KoBART, OpenAI API |
 | 데이터 수집 | Selenium, BeautifulSoup, Tesseract OCR |
-| 환경 | Google Colab, Jupyter |
+| 환경 | Google Colab, Jupyter,MySQL, Rstudio |
